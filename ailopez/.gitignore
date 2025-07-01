@@ -1,0 +1,12 @@
+*.o
+fdf
+obj/
+*.a
+<<<<<<< HEAD
+.DS_Store
+*.d
+=======
+*.d
+.DS_Store
+>>>>>>> sphere
+.vscode/
