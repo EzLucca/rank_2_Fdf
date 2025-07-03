@@ -1,46 +1,41 @@
-NAME	:= fdf 
+NAME		= fdf
+CC			= cc
+CFLAGS		= -Wextra -Wall -Werror -O2 -Ofast #-g -fsanitize=address -Wunreachable-code 
+LIBFT		= ./lib/libft
+LIBMLX		= ./lib/MLX42
+RM			= rm -rf
 
-LIBFT_DIR := libft
-LIBFT := $(LIBFT_DIR)/libft.a
+HEADERS	= -I ./includes -I $(LIBMLX)/include
 
-CFLAGS	:= -Wextra -Wall -Werror -Wunreachable-code -Ofast -I$(INCLUDE_DIR)
-C_MLX := $(MLX_LIB) -Iinclude -ldl -lglfw -pthread -lm
+LIBS	= $(LIBMLX)/build/libmlx42.a -lglfw -pthread -lm -L"/opt/homebrew/Cellar/glfw/3.4/lib/" #-ldl
 
+SOURCES = src/main.c \
 
-MLX_REPO := https://github.com/codam-coding-college/MLX42.git
-MLX_DIR := MLX42
-MLX_BUILD_DIR := build
-MLX_LIB := $(MLX_DIR)/$(MLX_BUILD_DIR)/libmlx42.a
-
-INCLUDE_DIR	:= ./include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
-SRCS	:= $(shell find ./src -iname "*.c")
-OBJS	:= ${SRCS:.c=.o}
+OBJS	= $(SOURCES:.c=.o)
 
 all: $(NAME)
 
-$(LIBFT):
-	@make --no-print-directory -C $(LIBFT_DIR)
+$(LIBFT)/libft.a:
+	@make -C $(LIBFT)
 
-$(MLX_LIB):
-	if ! find . | grep MLX42; then \
-		git clone $(MLX_REPO) $(MLX_DIR);\
-	fi;
-	@cd $(MLX_DIR) && cmake -B build && cmake --build build -j4
+$(LIBMLX)/build/libmlx42.a:
+	@cmake $(LIBMLX) -B $(LIBMLX)/build
+	@make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< -D VISUALIZE=$(if $(VISUALIZE),1,0) 
+	$(CC) $(CFLAGS) $(HEADERS) -o $@ -c $<
 
-$(NAME): $(LIBFT) $(MLX_LIB) $(OBJS) $(HEADERS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(C_MLX) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a
+	$(CC) $(OBJS) $(LIBFT)/libft.a $(LIBS) -o $(NAME) 
 
 clean:
-	@rm -rf $(OBJS)
-	@rm -rf $(LIBMLX)/build
+	@$(RM) $(OBJS)
+	@$(RM) $(LIBMLX)/build
+	@make -C $(LIBFT) fclean
 
 fclean: clean
 	@rm -rf $(NAME)
 
 re: clean all
 
-.PHONY: all, clean, fclean, re, libmlx
+.PHONY: re fclean clean all
