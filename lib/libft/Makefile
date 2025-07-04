@@ -82,15 +82,12 @@ $(NAME): $(LIBFT_OBJECTS) $(FT_PRINTF_OBJECTS) $(GNL_OBJECTS)
 
 $(DIR_OBJ)/%.o: %.c | $(DIR_OBJ)
 	@$(COMPILER) $(CFLAGS) -I $(HEADERS) -c $< -o $@
-	@echo "... 🛠️ compiling $<"
 
 $(DIR_OBJ)/%.o: $(GNL_DIR)/%.c | $(DIR_OBJ)
 	@$(COMPILER) $(CFLAGS) -I $(HEADERS) -c $< -o $@
-	@echo "... 🛠️ compiling $<"
 
 $(DIR_OBJ)/%.o: $(FT_PRINTF_DIR)/%.c | $(DIR_OBJ)
 	@$(COMPILER) $(CFLAGS) -I $(HEADERS) -c $< -o $@
-	@echo "... 🛠️ compiling $<"
 
 $(DIR_OBJ):
 	@mkdir -p $(DIR_OBJ)

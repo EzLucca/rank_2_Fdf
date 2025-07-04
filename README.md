@@ -21,3 +21,5 @@ be used is minilibx.
 
 ### Fonts
 `https://pedromelodev.com/index.php/2024/01/14/fdf-chronicles-navigating-the-pro-world-of-2d-projections/`
+`https://medium.com/@ouaallaabdelali1/fdf-725b6255d053`
+`http://43.128.62.24:91/ArthurSobreira/map_generator_fdf`

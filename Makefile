@@ -1,41 +1,52 @@
-NAME		= fdf
-CC			= cc
-CFLAGS		= -Wextra -Wall -Werror -O2 -Ofast #-g -fsanitize=address -Wunreachable-code 
-LIBFT		= ./lib/libft
-LIBMLX		= ./lib/MLX42
-RM			= rm -rf
+CC       := cc
+CFLAGS   := -Wall -Wextra -Werror -O3
+LDFLAGS  := -ldl -lglfw -pthread -lm
 
-HEADERS	= -I ./includes -I $(LIBMLX)/include
+NAME     := fdf
 
-LIBS	= $(LIBMLX)/build/libmlx42.a -lglfw -pthread -lm -L"/opt/homebrew/Cellar/glfw/3.4/lib/" #-ldl
+SRC_DIR     := src
+BUILD_DIR   := build
+OBJ_DIR     := $(BUILD_DIR)/src
+INCLUDES    := -I include -I lib/MLX42/include -I lib/libft/include
 
-SOURCES = src/main.c \
+LIBFT_DIR   := lib/libft
+LIBFT_A     := $(LIBFT_DIR)/libft.a
+MLX_DIR     := lib/MLX42
+MLX_A       := $(BUILD_DIR)/mlx42/libmlx42.a
 
-OBJS	= $(SOURCES:.c=.o)
+SRC      := $(wildcard $(SRC_DIR)/*.c)
+OBJ      := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+GREEN = \033[0;32m
 
 all: $(NAME)
 
-$(LIBFT)/libft.a:
-	@make -C $(LIBFT)
+$(NAME): $(OBJ) $(LIBFT_A) $(MLX_A)
+	@$(CC) $(OBJ) $(LIBFT_A) $(MLX_A) $(LDFLAGS) -o $@
+	@echo "✅ Build $(GREEN)$(NAME) successfully! 🎉"
 
-$(LIBMLX)/build/libmlx42.a:
-	@cmake $(LIBMLX) -B $(LIBMLX)/build
-	@make -C $(LIBMLX)/build -j4
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(HEADERS) -o $@ -c $<
+$(OBJ_DIR):
+	@mkdir -p $@
 
-$(NAME): $(OBJS) $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a
-	$(CC) $(OBJS) $(LIBFT)/libft.a $(LIBS) -o $(NAME) 
+$(LIBFT_A):
+	@make --no-print-directory -C $(LIBFT_DIR)
+
+$(MLX_A):
+	@cmake -S $(MLX_DIR) -B $(BUILD_DIR)/mlx42
+	@make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4
 
 clean:
-	@$(RM) $(OBJS)
-	@$(RM) $(LIBMLX)/build
-	@make -C $(LIBFT) fclean
+	@rm -rf $(BUILD_DIR)
+	@make --no-print-directory -C $(LIBFT_DIR) clean
+	@echo "🧹 Removed directory $(GREEN) $(BUILD_DIR)."
 
 fclean: clean
 	@rm -rf $(NAME)
+	@echo "🧹 Removed executable $(GREEN) $(NAME)."
 
-re: clean all
+re: fclean all
 
-.PHONY: re fclean clean all
+.PHONY: all clean fclean re

@@ -6,53 +6,47 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 14:46:45 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/03 15:57:47 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/04 15:29:04 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/libft/include/libft.h"
 #include "../include/fdf.h"
-#define BPP sizeof(int32_t)
-#define WIDTH 500
-#define HEIGHT 500
 
 // Exit the program as failure.
-static void ft_error(void)
+static void ft_error(char *str)
 {
-	ft_printf("%s", mlx_strerror(mlx_errno));
+	ft_printf("Error: %s", str);
 	exit(EXIT_FAILURE);
 }
 
-// Print the window width and height.
-static void ft_hook(void* param)
+void parse_map(int file, int x, int y)
 {
-	const mlx_t* mlx = param;
+	t_parse	m;
 
-	ft_printf("WIDTH: %d | HEIGHT: %d\n", mlx->width, mlx->height);
+	ft_bzero(&m, sizeof(t_parse));
+	m.file = file;
+
 }
 
-int32_t	main(void)
+int	main(int argc, char **argv)
 {
 
-	// MLX allows you to define its core behaviour before startup.
-	// mlx_set_setting(MLX_MAXIMIZED, true);
-	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "fdf", true);
-	if (!mlx)
-		ft_error();
+	t_fdf	fdf;
+	int		file;
 
-	/* Do stuff */
+	ft_bzero(&fdf, sizeof(fdf));
+	if (argc != 2)
+		ft_error("Correct usage: ./fdf <map>\n");
+	// read map
+	file = open(argv[1], O_RDONLY);
+	if (file == -1)
+		ft_error("Can't open file.\n");
+	// Parsing call
+	fdf.points = parse_map(file, fdf.points->map_x, fdf.points->map_z);
+	close(file);
+	// draw lines
 
-	// Create and display the image.
-	mlx_image_t* img = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
-		ft_error();
-
-	// Even after the image is being displayed, we can still modify the buffer.
-	mlx_put_pixel(img, WIDTH/2, HEIGHT/2, 0xFF0000FF);
-	mlx_image_to_window(mlx, img, WIDTH/2, HEIGHT/2);
-	// Register a hook and pass mlx as an optional param.
-	mlx_loop_hook(mlx, ft_hook, mlx);
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	// mlx loop
+	loop_mlx(&fdf);
 	return (EXIT_SUCCESS);
 }
