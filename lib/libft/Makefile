@@ -7,7 +7,7 @@ HEADERS = include/
 LIBFT_FLAGS = -L $(DIR_LIB) -lft
 
 COMPILER = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fPIE
 AR = ar rcs
 RM = rm -rf
 

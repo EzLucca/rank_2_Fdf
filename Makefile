@@ -1,6 +1,6 @@
 CC       := cc
 CFLAGS   := -Wall -Wextra -Werror -O3
-LDFLAGS  := -ldl -lglfw -pthread -lm
+LDFLAGS  := -ldl -lglfw -lm
 
 NAME     := fdf
 
@@ -45,6 +45,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
+	@make --no-print-directory fclean -C $(LIBFT_DIR)
 	@echo "🧹 Removed executable $(GREEN) $(NAME)."
 
 re: fclean all

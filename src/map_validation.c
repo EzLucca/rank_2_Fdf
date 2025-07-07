@@ -14,27 +14,38 @@
 
 bool retangular_check(t_fdf *fdf)
 {
-	char *new_line;
-	char **split;
-	int		i;
+	char	*line;
+	char	**split;
+	int		current_width;
+	int		expected_width;
 
-	i = 0;
-	while ((new_line = get_next_line(fdf->fd)))
+	expected_width = -1;
+	while ((line = get_next_line(fdf->fd)))
 	{
-		fdf->map_y++;
-		split = ft_split(new_line, ' ');
-		while(split[i])
+		split = ft_split(line, ' ');
+		if(!split)
+			return (false);
+		current_width = 0;
+		while(split[current_width])
+			current_width++;
+		if (expected_width == -1)
+			expected_width = current_width;
+		else if (current_width != expected_width)
 		{
-			fdf->map_x++;
-			free(split[i]);
-			i++;
+		ft_free_array(split);
+		free(line);
+		return (false);
 		}
-		free(split);
-		free(new_line);
+		fdf->map_y++;
+		ft_free_array(split);
+		free(line);
 	}
 	if (fdf->map_y == 0)
 		ft_error("Empty file.");
-	if (!(fdf->map_x % fdf->map_y == 0))
+	ft_printf("x: %d\n", fdf->map_x);
+	ft_printf("y: %d\n", fdf->map_y);
+	fdf->map_x = expected_width;
+	if (!(fdf->map_x % fdf->map_y == 0)) // not work for M(2x9)
 		return (false);
 	return (true);
 }
