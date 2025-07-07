@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/07 15:53:45 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:55:09 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # define HEIGHT 720 /* Initial window height */
 # define TITLE "fdf" /* Text shown in window title bar */
 # define MAP_SCALE 0.05 /* Vertical scale of map */
-# define BUFFER_SIZE 1
 
 typedef struct s_map
 {
