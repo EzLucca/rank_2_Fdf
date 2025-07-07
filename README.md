@@ -17,6 +17,14 @@ be used is minilibx.
 
 ### The Functions 
 ### The logic
+1. Argv checks
+2. Map validation
+    2.1 correct extension
+    2.2 empty map
+    2.3 retangular map
+3. Input of data
+4. Line draw
+5. visualization
 ### The Bonus
 
 ### Fonts

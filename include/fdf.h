@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/04 15:22:03 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/07 15:53:45 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@
 # define HEIGHT 720 /* Initial window height */
 # define TITLE "fdf" /* Text shown in window title bar */
 # define MAP_SCALE 0.05 /* Vertical scale of map */
+# define BUFFER_SIZE 1
 
 typedef struct s_map
 {
-	float	map_x;
-	float	map_y;
-	float	map_z;
-	float	color;
+	int		map_x;
+	int		map_y;
+	int		map_z;
+	int		color;
 } t_map;
 
 typedef struct s_parse
@@ -40,11 +41,19 @@ typedef struct s_parse
 
 typedef struct s_fdf
 {
+	int			fd;
+	int			height;
 	mlx_t		*mlx;
 	mlx_image_t	*img;
 	t_map		*points;
+	int			map_x;
+	int			map_y;
+	int			map_z;
 } t_fdf;
 
 void loop_mlx(t_fdf *fdf);
+void ft_error(char *str);
+void	open_validate_map(char *argv, t_fdf *fdf);
+bool	check_extension(char *filename);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:03 by edlucca           #+#    #+#             */
-/*   Updated: 2025/06/30 17:37:02 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/07 15:54:49 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 19 
+#  define BUFFER_SIZE 1 
 # endif
 
 // ------------------------ Libraries ------------------------ //
