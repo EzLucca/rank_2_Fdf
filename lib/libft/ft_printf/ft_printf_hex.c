@@ -6,11 +6,11 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:06:16 by edlucca           #+#    #+#             */
-/*   Updated: 2025/06/29 15:08:06 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:59:50 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../include/ft_printf.h"
 
 static int	ft_print_base(unsigned long nbr, unsigned int base, char *str)
 {

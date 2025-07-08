@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/15 10:27:20 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/08 14:35:37 by edlucca          ###   ########.fr       */
+/*   Created: 2025/07/08 14:33:18 by edlucca           #+#    #+#             */
+/*   Updated: 2025/07/08 15:51:24 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/fdf.h"
 
-//This should return the len of the substring
 static int	substr_len(char const *s, char c)
 {
 	int	len;
@@ -27,14 +26,14 @@ static int	substr_len(char const *s, char c)
 }
 
 //This function count the word of the string
-static int	count_words(const char *s, char c)
+int	count_tokens(const char *s, char c)
 {
 	int	count;
 
 	count = 0;
 	while (*s)
 	{
-		if (*s != c)
+		if (*s != c && *s != '\n')
 		{
 			count++;
 			s += substr_len(s, c);
@@ -58,20 +57,20 @@ static void	*free_array(char **array)
 }
 
 //Split the string in substring
-char	**ft_split(char const *s, char c)
+char	**fdf_split(char const *s, char c)
 {
 	char	**array;
 	int		i;
 
 	if (!s)
 		return (NULL);
-	array = malloc(sizeof(char *) * (count_words(s, c) + 1));
+	array = malloc(sizeof(char *) * (count_tokens(s, c) + 1));
 	if (!array)
 		return (NULL);
 	i = 0;
 	while (*s)
 	{
-		if (*s != c)
+		if (*s != c && *s != '\n')
 		{
 			array[i] = ft_substr(s, 0, substr_len(s, c));
 			if (!array[i++])

@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/07 17:55:09 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:53:12 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ typedef struct s_fdf
 	t_map		*points;
 	int			map_x;
 	int			map_y;
-	int			map_z;
+	int			**grid;
 } t_fdf;
 
 void loop_mlx(t_fdf *fdf);
 void ft_error(char *str);
 void	open_validate_map(char *argv, t_fdf *fdf);
 bool	check_extension(char *filename);
+char	**fdf_split(char const *s, char c);
+int		count_tokens(const char *s, char c);
 
 #endif

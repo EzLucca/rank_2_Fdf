@@ -6,11 +6,11 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:41:36 by edlucca           #+#    #+#             */
-/*   Updated: 2025/05/07 17:14:15 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:59:29 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../include/ft_printf.h"
 
 int	format_specifier(const char *format, va_list *arg_ptr)
 {

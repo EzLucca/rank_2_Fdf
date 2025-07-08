@@ -20,9 +20,13 @@ be used is minilibx.
 1. Argv checks
 2. Map validation
     2.1 correct extension
-    2.2 empty map
-    2.3 retangular map
+    2.2 empty map?
+    2.3 retangular mapa?
+    2.4 map with empty line in between?
 3. Input of data
+    3.1 Malloc grid
+    3.2 Fill the grid
+    3.3 check for correct characteres each point
 4. Line draw
 5. visualization
 ### The Bonus

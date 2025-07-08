@@ -6,11 +6,11 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:27:51 by edlucca           #+#    #+#             */
-/*   Updated: 2025/06/29 15:09:28 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:59:40 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../include/ft_printf.h"
 
 static size_t	ft_strlen(const char *s)
 {
@@ -43,22 +43,4 @@ int	ft_print_str(char *s)
 	if (bytes == -1)
 		return (-1);
 	return (bytes);
-}
-
-// Helper function to validation 
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	c = (unsigned char) c;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			return ((char *) &s[i]);
-		i++;
-	}
-	if (s[i] == c)
-		return ((char *) &s[i]);
-	return (NULL);
 }
