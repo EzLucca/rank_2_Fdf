@@ -12,25 +12,25 @@
 
 #include "../include/fdf.h"
 
-void	draw(t_fdf *fdf)
-{
-	int	x, y;
-
-	clear_image(&fdf->image);
-	y = 0;
-	while (y < fdf->map.height)
-	{
-		x = 0;
-		while (x < fdf->map.width)
-		{
-			if (x < fdf->map.width - 1)
-				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y][x + 1]);
-			if (y < fdf->map.height - 1)
-				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y + 1][x]);
-			x++;
-		}
-		y++;
-	}
-}
-
-
+// void	draw(t_fdf *fdf)
+// {
+// 	int	x, y;
+//
+// 	clear_image(&fdf->image);
+// 	y = 0;
+// 	while (y < fdf->map.height)
+// 	{
+// 		x = 0;
+// 		while (x < fdf->map.width)
+// 		{
+// 			if (x < fdf->map.width - 1)
+// 				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y][x + 1]);
+// 			if (y < fdf->map.height - 1)
+// 				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y + 1][x]);
+// 			x++;
+// 		}
+// 		y++;
+// 	}
+// }
+//
+//

@@ -15,7 +15,7 @@
 int	main(int argc, char **argv)
 {
 
-	t_fdf	fdf;
+	t_map	fdf;
 
 	if (argc != 2)
 		ft_error("Correct usage: ./fdf <map>");

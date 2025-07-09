@@ -12,17 +12,18 @@
 
 #include "../include/fdf.h"
 
-void	open_validate_map(char *argv, t_fdf *fdf)
+void	open_validate_map(char *argv, t_map *fdf)
 {
 	if (!check_extension(argv))
 		ft_error("not an .fdf file");
 	fdf->fd = open(argv, O_RDONLY);
+	ft_printf("%d\n", fdf->fd);
 	if (fdf->fd < 0)
 		ft_error_close("Can't open file.", fdf); //close fd
 	if(!(retangular_check(fdf)))
 		ft_error_close("Invalid map", fdf); //close fd
-	
-
+	if(!(points_check(fdf)))	
+		ft_error_close("Invalid points", fdf); //close fd
 	close(fdf->fd);
 }
 

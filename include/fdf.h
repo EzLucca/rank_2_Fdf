@@ -88,12 +88,13 @@ typedef struct s_draw
 
 void	loop_mlx(t_map *fdf);
 void	ft_error(char *str);
-void	open_validate_map(char *argv, t_fdf *fdf);
+void	open_validate_map(char *argv, t_map *fdf);
 bool	check_extension(char *filename);
 bool	retangular_check(t_map *map);
 char	**fdf_split(char const *s, char c);
 int		count_tokens(const char *s, char c);
 void	ft_error_close(char *str, t_map *map);
+bool	points_check(t_map *map);
 
 void	read_map(char *filename, t_map *map);
 void	draw(t_fdf *fdf);

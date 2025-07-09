@@ -12,10 +12,57 @@
 
 #include "../include/fdf.h"
 
+// TODO: Function bigger than 25 lines
+// problem with the file descriptor
+// get_next_line should be in a while
+bool	points_check(t_map *map)
+{
+	char	**split;
+	char	*line;
+	char	**point;
+	int		i;
+	int		j;
+
+	ft_printf("%d\n", map->fd);
+	i = 0;
+	j = 0;
+	point = NULL;
+	split = NULL;
+	line = get_next_line(map->fd);
+	ft_printf("%s\n", line);
+	if (!line)
+		return (false);
+	split = fdf_split(line, ' ');
+	if (!split)
+		return (false);
+	while (split[i])
+	{
+		if (ft_strchr(split[i], ','))
+			point = fdf_split(split[i], ',');
+		else
+		{
+			point = &split[i];
+			ft_printf("point: %s", point);
+		}
+		if (point[0][0] == '-' || point[0][0] == '+')
+			j++;
+		while (point[0][j])
+		{
+			if (!ft_isdigit(point[0][j]))
+				return (false);
+			j++;
+		}
+		ft_free_array(point);
+		i++;
+	}
+	ft_free_array(split);
+	free(line);
+	return (true);
+}
+
 bool	retangular_check(t_map *map)
 {
 	char	*line;
-	char	**split;
 	int		current_column;
 
 	current_column = 0;
@@ -25,17 +72,14 @@ bool	retangular_check(t_map *map)
 			return (false);
 		map->height++;
 		current_column = count_tokens(line, ' ');
-		split = fdf_split(line, ' ');
 		if (map->width== 0)
 			map->width= current_column;
 		else if ((map->width!= current_column))
 		{
 			free(line);
-			ft_free_array(split);
 			return (false);
 		}
 		free(line);
-		ft_free_array(split);
 	}
 	return (true);
 }

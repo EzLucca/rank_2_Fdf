@@ -12,13 +12,13 @@ be used is minilibx.
 
 ### The Functions 
 ### The logic
-1. [x] Argv checks
+1. Argv checks
 2. Map validation
 - [x] correct extension
 - [x] empty map?
 - [x] retangular mapa?
 - [x] map with empty line in between?
-3. [ ] Input of data
+3. Input of data
 - [ ] Malloc grid
 - [ ] Fill the grid
 - [ ] check for correct characteres each point
