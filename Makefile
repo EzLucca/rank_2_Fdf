@@ -39,14 +39,12 @@ $(MLX_A):
 	@make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4
 
 clean:
-	@rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
 	@make --no-print-directory -C $(LIBFT_DIR) clean
-	@echo "🧹 Removed directory $(GREEN) $(BUILD_DIR)."
 
 fclean: clean
-	@rm -rf $(NAME)
+	rm -rf $(NAME)
 	@make --no-print-directory fclean -C $(LIBFT_DIR)
-	@echo "🧹 Removed executable $(GREEN) $(NAME)."
 
 re: fclean all
 

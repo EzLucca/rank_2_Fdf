@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:55:58 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/07 14:56:30 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/09 17:18:49 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void ft_error(char *str)
 	exit(EXIT_FAILURE);
 }
 
-bool	check_extension(char *filename)
+void ft_error_close(char *str, t_map *map)
 {
-	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
-		return (true);
-	return (false);
+	ft_printf("Error: %s\n", str);
+	close(map->fd);
+	exit(EXIT_FAILURE);
 }

@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   image.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/03 14:46:45 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/09 16:53:14 by edlucca          ###   ########.fr       */
+/*   Created: 2025/07/09 17:11:41 by edlucca           #+#    #+#             */
+/*   Updated: 2025/07/09 17:14:24 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int	main(int argc, char **argv)
+void	put_pixel(t_image *img, int x, int y, int color)
 {
+	char	*dst;
 
-	t_fdf	fdf;
+	if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
+		return;
+	dst = img->data + (y * img->size_line + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
+}
 
-	if (argc != 2)
-		ft_error("Correct usage: ./fdf <map>");
-	ft_bzero(&fdf, sizeof(fdf));
-	open_validate_map(argv[1], &fdf);
-	// Parsing 
-	// fdf.points = parse_map(file, fdf.points->map_x, fdf.points->map_z);
-	// draw lines
-	loop_mlx(&fdf);
-	return (EXIT_SUCCESS);
+void	clear_image(t_image *img)
+{
+	ft_bzero(img->data, HEIGHT * img->size_line);
 }

@@ -10,23 +10,18 @@ various points  (x, y, z) thanks to line segments(edges).
 This is the first graphical project of the 42 school, the library allowed to 
 be used is minilibx. 
 
-
-
-
-
-
 ### The Functions 
 ### The logic
-1. Argv checks
+1. [x] Argv checks
 2. Map validation
-    2.1 correct extension
-    2.2 empty map?
-    2.3 retangular mapa?
-    2.4 map with empty line in between?
-3. Input of data
-    3.1 Malloc grid
-    3.2 Fill the grid
-    3.3 check for correct characteres each point
+- [x] correct extension
+- [x] empty map?
+- [x] retangular mapa?
+- [x] map with empty line in between?
+3. [ ] Input of data
+- [ ] Malloc grid
+- [ ] Fill the grid
+- [ ] check for correct characteres each point
 4. Line draw
 5. visualization
 ### The Bonus
@@ -35,3 +30,6 @@ be used is minilibx.
 `https://pedromelodev.com/index.php/2024/01/14/fdf-chronicles-navigating-the-pro-world-of-2d-projections/`
 `https://medium.com/@ouaallaabdelali1/fdf-725b6255d053`
 `http://43.128.62.24:91/ArthurSobreira/map_generator_fdf`
+`https://velog.io/@tmdgks2222/fdf`
+`https://github.com/8luerose/FDF.git`
+`https://github.com/ailopez-o/42Barcelona-FdF`

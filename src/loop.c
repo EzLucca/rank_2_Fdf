@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:04:29 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/04 15:04:55 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/09 17:25:22 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void key_hook(mlx_key_data_t key, void *param)
 {
-	t_fdf *	fdf;
+	t_map *	fdf;
 
-	fdf = (t_fdf*) param;
+	fdf = (t_map*) param;
 	if (key.action == MLX_PRESS)
 	{
 		if (key.key == MLX_KEY_ESCAPE)
@@ -26,13 +26,13 @@ static void key_hook(mlx_key_data_t key, void *param)
 
 static void resize_hook(int width, int height, void *param)
 {
-	t_fdf	*fdf;
-	fdf = (t_fdf*) param;
+	t_map *	fdf;
+	fdf = (t_map*) param;
 
 	mlx_resize_image(fdf->img, width, height);
 }
 
-void loop_mlx(t_fdf *fdf)
+void loop_mlx(t_map *fdf)
 {
 	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
 	if (fdf->mlx != NULL)
@@ -49,7 +49,7 @@ void loop_mlx(t_fdf *fdf)
 					mlx_loop(fdf->mlx);
 			}
 		}
-		mlx_delete_image(fdf->mlx, fdf->img);	
+		mlx_delete_image(fdf->mlx, fdf->img);
 	}
 	mlx_terminate(fdf->mlx);
 }

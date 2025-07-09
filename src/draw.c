@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/03 14:46:45 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/09 16:53:14 by edlucca          ###   ########.fr       */
+/*   Created: 2025/07/09 17:11:00 by edlucca           #+#    #+#             */
+/*   Updated: 2025/07/09 17:13:16 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int	main(int argc, char **argv)
+void	draw(t_fdf *fdf)
 {
+	int	x, y;
 
-	t_fdf	fdf;
-
-	if (argc != 2)
-		ft_error("Correct usage: ./fdf <map>");
-	ft_bzero(&fdf, sizeof(fdf));
-	open_validate_map(argv[1], &fdf);
-	// Parsing 
-	// fdf.points = parse_map(file, fdf.points->map_x, fdf.points->map_z);
-	// draw lines
-	loop_mlx(&fdf);
-	return (EXIT_SUCCESS);
+	clear_image(&fdf->image);
+	y = 0;
+	while (y < fdf->map.height)
+	{
+		x = 0;
+		while (x < fdf->map.width)
+		{
+			if (x < fdf->map.width - 1)
+				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y][x + 1]);
+			if (y < fdf->map.height - 1)
+				draw_line(fdf, fdf->map.points[y][x], fdf->map.points[y + 1][x]);
+			x++;
+		}
+		y++;
+	}
 }
+
+

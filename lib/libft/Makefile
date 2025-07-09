@@ -90,16 +90,13 @@ $(DIR_OBJ)/%.o: $(FT_PRINTF_DIR)/%.c | $(DIR_OBJ)
 	@$(COMPILER) $(CFLAGS) -I $(HEADERS) -c $< -o $@
 
 $(DIR_OBJ):
-	@mkdir -p $(DIR_OBJ)
-	@echo "📁 Creating directory for $(NAME) objects"
+	mkdir -p $(DIR_OBJ)
 
 clean:
 	@$(RM) $(DIR_OBJ)
-	@echo "🧹 Objects of $(NAME) are removed! -> 🗑️"
 
 fclean: clean
-	@$(RM) $(NAME)
-	@echo "🧹 Executable $(NAME) is removed! -> 🗑️ "
+	$(RM) $(NAME)
 
 re: fclean all
 
