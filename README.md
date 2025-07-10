@@ -16,8 +16,10 @@ be used is minilibx.
 2. Map validation
 - [x] correct extension
 - [x] empty map?
-- [x] retangular mapa?
-- [x] map with empty line in between?
+- [x] empty point?
+- [x] empty line in between?
+- [x] check point values
+- [x] check color values
 3. Input of data
 - [ ] Malloc grid
 - [ ] Fill the grid

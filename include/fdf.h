@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/09 17:25:19 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/10 18:23:49 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,15 +86,17 @@ typedef struct s_draw
 }	t_draw;
 
 
+bool	points_check(char *line);
+char	**fdf_split(char const *s, char c);
+int		count_tokens(const char *s, char c);
 void	loop_mlx(t_map *fdf);
 void	ft_error(char *str);
 void	open_validate_map(char *argv, t_map *fdf);
-bool	check_extension(char *filename);
-bool	retangular_check(t_map *map);
-char	**fdf_split(char const *s, char c);
-int		count_tokens(const char *s, char c);
+void	check_extension(char *filename);
+void	grid_check(t_map *map);
 void	ft_error_close(char *str, t_map *map);
-bool	points_check(t_map *map);
+void	remove_newline(char *line);
+void	parse_map(char *argv, t_map *fdf);
 
 void	read_map(char *filename, t_map *map);
 void	draw(t_fdf *fdf);

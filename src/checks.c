@@ -12,81 +12,79 @@
 
 #include "../include/fdf.h"
 
-// TODO: Function bigger than 25 lines
-// problem with the file descriptor
-// get_next_line should be in a while
-bool	points_check(t_map *map)
+bool	color_check(const char *color)
+{
+	int i;
+
+	if (!color)
+		return (false);
+	if (color[0] != '0' || color[1] != 'x')
+		return (false);
+	i = 2;
+	if (color[i] == '\0')
+		return (false);
+	while (color[i])
+	{
+		if (!((color[i] >= '0' && color[i] <= '9') ||
+					(color[i] >= 'a' && color[i] <= 'f') ||
+					(color[i] >= 'A' && color[i] <= 'F')))
+		{
+			return (false);
+		}
+		i++;
+	}
+	return (true);
+}
+
+bool	number_check(const char *str)
+{
+	int i = 0;
+
+	if (!str || str[0] == '\0')
+		return (false);
+	if (str[0] == '+' || str[0] == '-')
+		i++;
+	if (str[i] == '\0')
+		return (false);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool	valid_point(char *token)
+{
+	char **point;
+
+	if (ft_strchr(token, ','))
+	{
+		point = fdf_split(token, ',');
+		if(!point || !number_check(point[0]) || !color_check(point[1]))
+			return (ft_free_array(point), false);
+	}
+	else if (!number_check(token))
+		return (false);
+	return(true);
+}
+
+bool	points_check(char *line)
 {
 	char	**split;
-	char	*line;
-	char	**point;
 	int		i;
-	int		j;
 
-	ft_printf("%d\n", map->fd);
 	i = 0;
-	j = 0;
-	point = NULL;
-	split = NULL;
-	line = get_next_line(map->fd);
-	ft_printf("%s\n", line);
-	if (!line)
-		return (false);
 	split = fdf_split(line, ' ');
 	if (!split)
-		return (false);
+		return (free(line), false);
 	while (split[i])
 	{
-		if (ft_strchr(split[i], ','))
-			point = fdf_split(split[i], ',');
-		else
-		{
-			point = &split[i];
-			ft_printf("point: %s", point);
-		}
-		if (point[0][0] == '-' || point[0][0] == '+')
-			j++;
-		while (point[0][j])
-		{
-			if (!ft_isdigit(point[0][j]))
-				return (false);
-			j++;
-		}
-		ft_free_array(point);
+		if (split[i][0] != '\0' && !valid_point(split[i]))
+			return (ft_free_array(split), free(line), false);
 		i++;
 	}
 	ft_free_array(split);
-	free(line);
 	return (true);
-}
-
-bool	retangular_check(t_map *map)
-{
-	char	*line;
-	int		current_column;
-
-	current_column = 0;
-	while((line = get_next_line(map->fd)))
-	{
-		if (!line)
-			return (false);
-		map->height++;
-		current_column = count_tokens(line, ' ');
-		if (map->width== 0)
-			map->width= current_column;
-		else if ((map->width!= current_column))
-		{
-			free(line);
-			return (false);
-		}
-		free(line);
-	}
-	return (true);
-}
-
-bool	check_extension(char *filename)
-{
-	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
-		return (true);
-	return (false);
 }
