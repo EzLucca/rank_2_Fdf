@@ -21,10 +21,9 @@ be used is minilibx.
 - [x] check point values
 - [x] check color values
 3. Input of data
-- [ ] Malloc grid
-- [ ] Fill the grid
-- [ ] check for correct characteres each point
-4. Line draw
+- [x] Malloc grid
+- [x] Fill the grid
+4. Draw points and line
 5. visualization
 ### The Bonus
 

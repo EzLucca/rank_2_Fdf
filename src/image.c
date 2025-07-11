@@ -22,7 +22,7 @@ void	put_pixel(t_image *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	clear_image(t_image *img)
+void	clear_image(mlx_image_t *img)
 {
-	ft_bzero(img->data, HEIGHT * img->size_line);
+	ft_bzero(img->pixels, img->width * img->height * 4);
 }

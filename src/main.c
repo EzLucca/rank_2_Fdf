@@ -24,6 +24,7 @@ int	main(int argc, char **argv)
 	// Parsing 
 	parse_map(argv[1], &fdf);
 	// draw lines
+	//
 	loop_mlx(&fdf);
 	return (EXIT_SUCCESS);
 }

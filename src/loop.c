@@ -12,6 +12,17 @@
 
 #include "../include/fdf.h"
 
+void render(void *param)
+{
+	t_map *map;
+
+	map = (t_map *)param;
+	clear_image(map->img);  // Clear previous frame (mlx42)
+	project_all_points(map);
+	draw_map_lines(map);
+	// mlx_image_to_window(map->mlx, map->img, 0, 0);  // Show image in window
+}
+
 static void key_hook(mlx_key_data_t key, void *param)
 {
 	t_map *	fdf;
@@ -30,6 +41,7 @@ static void resize_hook(int width, int height, void *param)
 	fdf = (t_map*) param;
 
 	mlx_resize_image(fdf->img, width, height);
+	render(fdf);
 }
 
 void loop_mlx(t_map *fdf)
@@ -42,15 +54,15 @@ void loop_mlx(t_map *fdf)
 		{
 			if(mlx_image_to_window(fdf->mlx, fdf->img, 0, 0) != -1)
 			{
+				mlx_loop_hook(fdf->mlx, render, fdf);
 				mlx_key_hook(fdf->mlx, key_hook, fdf);
 				mlx_resize_hook(fdf->mlx, resize_hook, fdf);
 				// mlx_scroll_hook(fdf->mlx, scroll_hook, fdf);
 				// if (mlx_loop_hook(fdf->mlx, loop_hook, fdf))
-					mlx_loop(fdf->mlx);
+				mlx_loop(fdf->mlx);
 			}
 		}
 		mlx_delete_image(fdf->mlx, fdf->img);
 	}
 	mlx_terminate(fdf->mlx);
 }
-

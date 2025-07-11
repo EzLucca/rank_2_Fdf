@@ -45,7 +45,7 @@ int	count_tokens(const char *s, char c)
 }
 
 //Free every array if one of them are not properly allocated
-static void	*free_array(char **array)
+void	*free_array(char **array)
 {
 	int	i;
 
