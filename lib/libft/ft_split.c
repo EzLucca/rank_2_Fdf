@@ -27,7 +27,7 @@ static int	substr_len(char const *s, char c)
 }
 
 //This function count the word of the string
-static int	count_words(const char *s, char c)
+int	count_tokens(const char *s, char c)
 {
 	int	count;
 
@@ -65,7 +65,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	array = malloc(sizeof(char *) * (count_words(s, c) + 1));
+	array = malloc(sizeof(char *) * (count_tokens(s, c) + 1));
 	if (!array)
 		return (NULL);
 	i = 0;

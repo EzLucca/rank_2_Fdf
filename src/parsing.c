@@ -18,7 +18,6 @@ int ft_atoi_hex(const char *hex)
 
 	if (hex[0] == '0' && (hex[1] == 'x' || hex[1] == 'X'))
 		hex += 2;
-
 	while (*hex)
 	{
 		result *= 16;
@@ -40,7 +39,7 @@ void	fill_point(t_point *p, char *data, int x, int y)
 	p->y = y;
 	if (ft_strchr(data, ','))
 	{
-		point_parts = fdf_split(data, ',');
+		point_parts = ft_split(data, ',');
 		p->z = ft_atoi(point_parts[0]);
 		p->color = ft_atoi_hex(point_parts[1]);
 		ft_free_array(point_parts);
@@ -48,8 +47,9 @@ void	fill_point(t_point *p, char *data, int x, int y)
 	else
 	{
 		p->z = ft_atoi(data);
-		p->color = 0xFFFFFF;
+		p->color = 0xFFFFFFFF;
 	}
+	// ft_printf("fill_point: x=%d y=%d z=%d\n", x, y, p->z); // DEBUG
 }
 
 int	process_line(t_map *map, char *line, int y)
@@ -57,16 +57,17 @@ int	process_line(t_map *map, char *line, int y)
 	char	**split;
 	int		x;
 
-	x = 0;
 	remove_newline(line);
-	split = fdf_split(line, ' ');
+	split = ft_split(line, ' ');
 	if (!split)
 		return (free(line), 0);
 	map->points[y] = malloc(sizeof(t_point) * map->width);
 	if (!map->points[y])
 		return (ft_free_array(split), free(line), 0);
+	x = 0;
 	while (x < map->width)
 	{
+		// ft_printf("split[%d] = %s\n", x, split[x]);  // DEBUG
 		fill_point(&map->points[y][x], split[x], x, y);
 		x++;
 	}

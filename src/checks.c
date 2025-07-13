@@ -61,7 +61,7 @@ bool	valid_point(char *token)
 
 	if (ft_strchr(token, ','))
 	{
-		point = fdf_split(token, ',');
+		point = ft_split(token, ',');
 		if(!point || !number_check(point[0]) || !color_check(point[1]))
 			return (ft_free_array(point), false);
 	}
@@ -76,7 +76,7 @@ bool	points_check(char *line)
 	int		i;
 
 	i = 0;
-	split = fdf_split(line, ' ');
+	split = ft_split(line, ' ');
 	if (!split)
 		return (free(line), false);
 	while (split[i])

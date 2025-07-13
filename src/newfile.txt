@@ -1,0 +1,465 @@
+==> camera.c <==
+
+// void	init_camera(t_camera *camera, t_map *map)
+// {
+// 	camera->zoom = fmin(WIDTH / map->width / 2, HEIGHT / map->height / 2);
+// 	camera->angle_x = 0.5;
+// 	camera->angle_y = 0.5;
+// 	camera->angle_z = 0.5;
+// 	camera->x_offset = WIDTH / 2;
+// 	camera->y_offset = HEIGHT / 2;
+// 	camera->z_scale = 1;
+// 	camera->projection = 0; // 0 = isometric
+// }
+
+==> checks.c <==
+
+bool	color_check(const char *color)
+{
+	int i;
+
+	if (!color)
+		return (false);
+	if (color[0] != '0' || color[1] != 'x')
+		return (false);
+	i = 2;
+	if (color[i] == '\0')
+		return (false);
+	while (color[i])
+	{
+		if (!((color[i] >= '0' && color[i] <= '9') ||
+					(color[i] >= 'a' && color[i] <= 'f') ||
+					(color[i] >= 'A' && color[i] <= 'F')))
+		{
+			return (false);
+		}
+		i++;
+	}
+	return (true);
+}
+
+bool	number_check(const char *str)
+{
+	int i = 0;
+
+	if (!str || str[0] == '\0')
+		return (false);
+	if (str[0] == '+' || str[0] == '-')
+		i++;
+	if (str[i] == '\0')
+		return (false);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool	valid_point(char *token)
+{
+	char **point;
+
+	if (ft_strchr(token, ','))
+	{
+		point = ft_split(token, ',');
+		if(!point || !number_check(point[0]) || !color_check(point[1]))
+			return (ft_free_array(point), false);
+	}
+	else if (!number_check(token))
+		return (false);
+	return(true);
+}
+
+bool	points_check(char *line)
+{
+	char	**split;
+	int		i;
+
+	i = 0;
+	split = ft_split(line, ' ');
+	if (!split)
+		return (free(line), false);
+	while (split[i])
+	{
+		if (split[i][0] != '\0' && !valid_point(split[i]))
+			return (ft_free_array(split), free(line), false);
+		i++;
+	}
+	ft_free_array(split);
+	return (true);
+}
+
+==> draw.c <==
+
+void	draw_line(t_point a, t_point b, mlx_image_t *img)
+{
+	int dx = abs(b.x - a.x);
+	int dy = -abs(b.y - a.y);
+	int sx = a.x < b.x ? 1 : -1;
+	int sy = a.y < b.y ? 1 : -1;
+	int err = dx + dy;
+
+	int x = a.x;
+	int y = a.y;
+
+	while (1)
+	{
+		if (x >= 0 && x < (int)img->width && y >= 0 && y < (int)img->height)
+			mlx_put_pixel(img, x, y, a.color);
+		if (x == b.x && y == b.y)
+			break;
+		int e2 = 2 * err;
+		if (e2 >= dy)
+		{
+			err += dy;
+			x += sx;
+		}
+		if (e2 <= dx)
+		{
+			err += dx;
+			y += sy;
+		}
+	}
+}
+
+void draw_map_lines(t_map *map)
+{
+	int row;
+	int col;
+
+	row = 0;
+	while ( row < map->height)
+	{
+		col = 0;
+		while (col < map->width)
+		{
+			if (col + 1 < map->width)
+				draw_line(map->points[row][col], map->points[row][col + 1], map->img);
+			if (row + 1 < map->height)
+				draw_line(map->points[row][col], map->points[row + 1][col], map->img);
+		}
+	}
+}
+
+t_point project_point(t_point p, t_map *map)
+{
+	float angle = ISO_ANGLE;
+	int zoom = map->zoom;
+	float elev_scale = map->elev_scale;
+
+	t_point projected;
+
+	p.x *= zoom;
+	p.y *= zoom;
+	p.z *= elev_scale;
+
+	projected.x = (p.x - p.y) * cos(angle);
+	projected.y = (p.x + p.y) * sin(angle) - p.z;
+	projected.color = p.color;
+
+	return projected;
+}
+
+void	project_all_points(t_map *map)
+{
+	int row;
+	int col;
+
+	row = 0;
+	col = 0;
+	while ( row < map->height)
+	{
+		while (col < map->width)
+		{
+			map->points[row][col] = project_point(map->points[row][col], map);
+			col++;
+		}
+		row++;
+	}
+}
+
+==> hooks.c <==
+
+// int	handle_key(int key, t_fdf *fdf)
+// {
+// 	if (key == 53) // ESC
+// 		exit(0);
+// 	else if (key == 126) // Up arrow
+// 		fdf->camera.y_offset -= 10;
+// 	else if (key == 125) // Down arrow
+// 		fdf->camera.y_offset += 10;
+// 	// Add more controls: zoom, projection, rotation...
+// 	draw(fdf);
+// 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->image.img_ptr, 0, 0);
+// 	return (0);
+// }
+//
+// void	setup_hooks(t_fdf *fdf)
+// {
+// 	mlx_key_hook(fdf->win_ptr, handle_key, fdf);
+// }
+
+==> image.c <==
+
+void	put_pixel(t_image *img, int x, int y, int color)
+{
+	char	*dst;
+
+	if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
+		return;
+	dst = img->data + (y * img->size_line + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
+}
+
+void	clear_image(mlx_image_t *img)
+{
+	ft_bzero(img->pixels, img->width * img->height * 4);
+}
+
+==> loop.c <==
+
+void render(void *param)
+{
+	t_map *map;
+
+	map = (t_map *)param;
+	clear_image(map->img);  // Clear previous frame (mlx42)
+	project_all_points(map);
+	draw_map_lines(map);
+	// mlx_image_to_window(map->mlx, map->img, 0, 0);  // Show image in window
+}
+
+static void key_hook(mlx_key_data_t key, void *param)
+{
+	t_map *	fdf;
+
+	fdf = (t_map*) param;
+	if (key.action == MLX_PRESS)
+	{
+		if (key.key == MLX_KEY_ESCAPE)
+			mlx_close_window(fdf->mlx);
+	}
+}
+
+static void resize_hook(int width, int height, void *param)
+{
+	t_map *	fdf;
+	fdf = (t_map*) param;
+
+	mlx_resize_image(fdf->img, width, height);
+	render(fdf);
+}
+
+void loop_mlx(t_map *fdf)
+{
+	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
+	if (fdf->mlx != NULL)
+	{
+		fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
+		if (fdf->img != NULL)
+		{
+			if(mlx_image_to_window(fdf->mlx, fdf->img, 0, 0) != -1)
+			{
+				mlx_loop_hook(fdf->mlx, render, fdf);
+				mlx_key_hook(fdf->mlx, key_hook, fdf);
+				mlx_resize_hook(fdf->mlx, resize_hook, fdf);
+				// mlx_scroll_hook(fdf->mlx, scroll_hook, fdf);
+				// if (mlx_loop_hook(fdf->mlx, loop_hook, fdf))
+				mlx_loop(fdf->mlx);
+			}
+		}
+		mlx_delete_image(fdf->mlx, fdf->img);
+	}
+	mlx_terminate(fdf->mlx);
+}
+
+==> main.c <==
+
+int	main(int argc, char **argv)
+{
+
+	t_map	fdf;
+
+	if (argc != 2)
+		ft_error("Correct usage: ./fdf <map>");
+	ft_bzero(&fdf, sizeof(fdf));
+	open_validate_map(argv[1], &fdf);
+	// Parsing 
+	parse_map(argv[1], &fdf);
+	// draw lines
+	//
+	loop_mlx(&fdf);
+	return (EXIT_SUCCESS);
+}
+
+==> map.c <==
+
+void	grid_check(t_map *map)
+{
+	char	*line;
+	int		current_column;
+
+	current_column = 0;
+	while((line = get_next_line(map->fd)))
+	{
+		if (!line)
+			ft_error_close("Invalid map.", map);
+		remove_newline(line);
+		if (!points_check(line))
+			ft_error_close("Invalid point.", map);
+		map->height++;
+		current_column = count_tokens(line, ' ');
+		if (map->width== 0)
+			map->width= current_column;
+		else if ((map->width!= current_column))
+		{
+			free(line);
+			ft_error_close("Couldn't read file", map);
+		}
+		free(line);
+	}
+	return ;
+}
+
+void	open_validate_map(char *argv, t_map *map)
+{
+	check_extension(argv);
+	map->fd = open(argv, O_RDONLY);
+	if (map->fd < 0)
+		ft_error_close("Can't open file.", map);
+	grid_check(map);
+	close(map->fd);
+}
+
+==> parsing.c <==
+
+int ft_atoi_hex(const char *hex)
+{
+	int result = 0;
+
+	if (hex[0] == '0' && (hex[1] == 'x' || hex[1] == 'X'))
+		hex += 2;
+
+	while (*hex)
+	{
+		result *= 16;
+		if (*hex >= '0' && *hex <= '9')
+			result += *hex - '0';
+		else if (*hex >= 'a' && *hex <= 'f')
+			result += *hex - 'a' + 10;
+		else if (*hex >= 'A' && *hex <= 'F')
+			result += *hex - 'A' + 10;
+		hex++;
+	}
+	return result;
+}
+
+void	fill_point(t_point *p, char *data, int x, int y)
+{
+	char	**point_parts;
+	p->x = x;
+	p->y = y;
+	if (ft_strchr(data, ','))
+	{
+		point_parts = ft_split(data, ',');
+		p->z = ft_atoi(point_parts[0]);
+		p->color = ft_atoi_hex(point_parts[1]);
+		ft_free_array(point_parts);
+	}
+	else
+	{
+		p->z = ft_atoi(data);
+		p->color = 0xFFFFFF;
+	}
+}
+
+int	process_line(t_map *map, char *line, int y)
+{
+	char	**split;
+	int		x;
+
+	x = 0;
+	remove_newline(line);
+	split = ft_split(line, ' ');
+	if (!split)
+		return (free(line), 0);
+	while (split[x])
+	{
+		ft_printf("split: %s\n", split[x]);
+		x++;
+	}
+	map->points[y] = malloc(sizeof(t_point) * map->width);
+	if (!map->points[y])
+		return (ft_free_array(split), free(line), 0);
+	while (x < map->width)
+	{
+		fill_point(&map->points[y][x], split[x], x, y);
+		x++;
+	}
+	ft_free_array(split);
+	free(line);
+	return (1);
+}
+
+void	parse_map(char *argv, t_map *map)
+{
+	char	*line;
+	int		y;
+
+	y = 0;
+	map->fd = open(argv, O_RDONLY);
+	if (map->fd < 0)
+		return ;
+	map->points = malloc(sizeof(t_point *) * map->height);
+	if (!map->points)
+		return ;
+	while ((line = get_next_line(map->fd)) && y < map->height)
+	{
+		if(!process_line(map, line, y))
+			break ;
+		y++;
+	}
+	close (map->fd);
+}
+
+==> utils.c <==
+
+// Exit the program as failure.
+void ft_error(char *str)
+{
+	ft_printf("Error: %s\n", str);
+	exit(EXIT_FAILURE);
+}
+
+void ft_error_close(char *str, t_map *map)
+{
+	ft_printf("Error: %s\n", str);
+	close(map->fd);
+	exit(EXIT_FAILURE);
+}
+
+void remove_newline(char *line)
+{
+	int i = 0;
+
+	if (!line)
+		return;
+	while (line[i])
+	{
+		if (line[i] == '\n')
+		{
+			line[i] = '\0';
+			return;
+		}
+		i++;
+	}
+}
+
+void	check_extension(char *filename)
+{
+	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
+		return ;
+	ft_error("not an .fdf file");
+}

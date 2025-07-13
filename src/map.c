@@ -34,6 +34,7 @@ void	grid_check(t_map *map)
 			free(line);
 			ft_error_close("Couldn't read file", map);
 		}
+		// ft_printf("Map width = %d (line = \"%s\")\n", current_column, line); // DEBUG
 		free(line);
 	}
 	return ;
@@ -44,7 +45,7 @@ void	open_validate_map(char *argv, t_map *map)
 	check_extension(argv);
 	map->fd = open(argv, O_RDONLY);
 	if (map->fd < 0)
-		ft_error_close("Can't open file.", map); //close fd
+		ft_error_close("Can't open file.", map);
 	grid_check(map);
 	close(map->fd);
 }

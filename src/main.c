@@ -21,10 +21,8 @@ int	main(int argc, char **argv)
 		ft_error("Correct usage: ./fdf <map>");
 	ft_bzero(&fdf, sizeof(fdf));
 	open_validate_map(argv[1], &fdf);
-	// Parsing 
 	parse_map(argv[1], &fdf);
-	// draw lines
-	//
+	init_camera(&fdf.camera, &fdf);
 	loop_mlx(&fdf);
 	return (EXIT_SUCCESS);
 }
