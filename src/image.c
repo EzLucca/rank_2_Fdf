@@ -12,15 +12,15 @@
 
 #include "../include/fdf.h"
 
-void	put_pixel(t_image *img, int x, int y, int color)
-{
-	char	*dst;
-
-	if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
-		return;
-	dst = img->data + (y * img->size_line + x * (img->bpp / 8));
-	*(unsigned int *)dst = color;
-}
+// void	put_pixel(t_map map, int x, int y, int color)
+// {
+// 	char	*dst;
+//
+// 	if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT)
+// 		return;
+// 	dst = map.img->pixels + (y * map.img->height + x * (map.img->count / 8));
+// 	*(unsigned int *)dst = color;
+// }
 
 void	clear_image(mlx_image_t *img)
 {

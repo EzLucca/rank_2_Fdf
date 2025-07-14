@@ -47,9 +47,9 @@ void	fill_point(t_point *p, char *data, int x, int y)
 	else
 	{
 		p->z = ft_atoi(data);
-		p->color = 0xFFFFFFFF;
+		p->color = ft_atoi_hex("0xFFFFFFFF");
 	}
-	// ft_printf("fill_point: x=%d y=%d z=%d\n", x, y, p->z); // DEBUG
+	// ft_printf("fill_point: x=%d y=%d z=%d color:%d\n", x, y, p->z, p->color); // DEBUG
 }
 
 int	process_line(t_map *map, char *line, int y)
@@ -67,7 +67,7 @@ int	process_line(t_map *map, char *line, int y)
 	x = 0;
 	while (x < map->width)
 	{
-		// ft_printf("split[%d] = %s\n", x, split[x]);  // DEBUG
+		// ft_printf("split[%d] = %s, y: %d\n", x, split[x], y);  // DEBUG
 		fill_point(&map->points[y][x], split[x], x, y);
 		x++;
 	}
@@ -93,6 +93,7 @@ void	parse_map(char *argv, t_map *map)
 		if(!process_line(map, line, y))
 			break ;
 		y++;
+		// ft_printf("%d\n", y); // DEBUG
 	}
 	close (map->fd);
 }

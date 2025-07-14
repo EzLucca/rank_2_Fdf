@@ -14,23 +14,10 @@
 
 void render(void *param)
 {
-	t_map *map;
-	int		col = 0;
-	int		row = 0;
+	t_map	*map;
 
 	map = (t_map *)param;
-	while (row < WIDTH)
-	{
-		while (col < HEIGHT)
-		{
-			mlx_put_pixel(map->img, col, row, 0xFFFFFF);
-			col++;
-		}
-		row++;
-	}
-	// clear_image(map->img);  // Clear previous frame (mlx42)
-	// draw_map_lines(map);
-	// mlx_image_to_window(map->mlx, map->img, 0, 0);  // Show image in window
+	draw_map(map);
 }
 
 static void key_hook(mlx_key_data_t key, void *param)
@@ -45,29 +32,37 @@ static void key_hook(mlx_key_data_t key, void *param)
 	}
 }
 
-// static void resize_hook(int width, int height, void *param)
-// {
-// 	t_map *	fdf;
-// 	fdf = (t_map*) param;
-//
-// 	mlx_resize_image(fdf->img, width, height);
-// 	render(fdf);
-// }
+static void resize_hook(int width, int height, void *param)
+{
+	t_map	*fdf;
+	float	map_width;
+	float	map_height;
+
+	fdf = (t_map*) param;
+	if(fdf->img)
+		mlx_delete_image(fdf->mlx, fdf->img);
+	fdf->img = mlx_new_image(fdf->mlx, width, height);
+	mlx_image_to_window(fdf->mlx, fdf->img, 0, 0);
+	map_width = fdf->width * fdf->camera.zoom;
+	map_height = fdf->height * fdf->camera.zoom;
+	fdf->camera.x_offset = (width / 2) - (map_width / 2);
+	fdf->camera.y_offset = (height / 2) - (map_height / 2);
+}
 
 void loop_mlx(t_map *fdf)
 {
 	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
 	if (fdf->mlx != NULL)
 	{
-		fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
+		fdf->img = mlx_new_image(fdf->mlx, fdf->mlx->width, fdf->mlx->height);
 		if (fdf->img != NULL)
 		{
 			if(mlx_image_to_window(fdf->mlx, fdf->img, 0, 0) != -1)
 			{
-				// render(fdf);
-				mlx_loop_hook(fdf->mlx, &render, fdf);
+				mlx_loop_hook(fdf->mlx, &ft_hook_movement, fdf);
 				mlx_key_hook(fdf->mlx, key_hook, fdf);
-				// mlx_resize_hook(fdf->mlx, resize_hook, fdf);
+				mlx_loop_hook(fdf->mlx, &render, fdf);
+				mlx_resize_hook(fdf->mlx, resize_hook, fdf);
 				// mlx_scroll_hook(fdf->mlx, scroll_hook, fdf);
 				// if (mlx_loop_hook(fdf->mlx, loop_hook, fdf))
 				mlx_loop(fdf->mlx);

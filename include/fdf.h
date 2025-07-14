@@ -26,7 +26,7 @@
 # define MAP_SCALE 0.05 /* Vertical scale of map */
 # define ISO_ANGLE 0.523599
 
-typedef struct s_point/* Represent the 3d point */
+typedef struct s_point /* Represent the 3d point */
 {
 	int		x;
 	int		y;
@@ -51,46 +51,13 @@ typedef struct s_map
 	int			fd;                 /* file descriptor */
 	int			height;				/* Number of lines */	
 	int			width;				/* Number of columns */
-	int			zoom;
+	float		zoom;
 	mlx_t		*mlx;				/* init the mlx42 */
 	mlx_image_t	*img;				/* Store the image */
 	t_point		**points;			/* 2d array of points */
 	float		elev_scale;
 	t_camera	camera;
 } t_map;
-
-
-typedef struct s_image
-{
-	void	*img_ptr;
-	char	*data;
-	int		bpp;
-	int		size_line;
-	int		endian;
-	int		width;
-	int		height;
-}	t_image;
-
-typedef struct s_fdf
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_image		image;
-	t_map		map;
-	t_camera	camera;
-}	t_fdf;
-
-typedef struct s_draw
-{
-	t_point	start;
-	t_point	end;
-	int		dx;
-	int		dy;
-	int		sx;
-	int		sy;
-	int		err;
-}	t_draw;
-
 
 bool	points_check(char *line);
 // char	**fdf_split(char const *s, char c);
@@ -105,18 +72,16 @@ void	check_extension(char *filename);
 void	grid_check(t_map *map);
 void	remove_newline(char *line);
 void	project_all_points(t_map *map);
-void	draw_line(t_point a, t_point b, mlx_image_t *img);
-void	draw_map_lines(t_map *map);
+// void	draw_line(t_point a, t_point b, mlx_image_t *img);
+void	draw_map(t_map *map);
 void	ft_error(char *str);
 void	ft_error_close(char *str, t_map *map);
 void	*free_array(char **array);
-t_point	project_point(t_point p, t_map *map);
+// t_point	project_point(t_point p, t_map *map);
 void	clear_image(mlx_image_t *img);
+void	ft_hook_movement(void *param);
 
 void	read_map(char *filename, t_map *map);
-void	draw(t_fdf *fdf);
-void	setup_hooks(t_fdf *fdf);
-void	put_pixel(t_image *img, int x, int y, int color);
-void	update_image(t_fdf *fdf);
+// void	put_pixel(t_image *img, int x, int y, int color);
 void	init_camera(t_camera *camera, t_map *map);
 #endif
