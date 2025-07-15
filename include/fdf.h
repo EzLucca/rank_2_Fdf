@@ -13,75 +13,97 @@
 #ifndef FDF_H
 # define FDF_H
 
-# include "../lib/libft/include/libft.h"
-# include "../lib/MLX42/include/MLX42/MLX42.h"
 # include <stdlib.h>
+# include <errno.h>
 # include <fcntl.h>
 # include <math.h>
+# include <string.h>
+# include <stdio.h>
+# include "../lib/libft/include/libft.h"
+# include "../lib/MLX42/include/MLX42/MLX42.h"
 
 # define BPP sizeof(int32_t)
 # define WIDTH 1280 /* Initial window width */
 # define HEIGHT 720 /* Initial window height */
 # define TITLE "fdf" /* Text shown in window title bar */
-# define MAP_SCALE 0.05 /* Vertical scale of map */
-# define ISO_ANGLE 0.523599
+# define TEXT_COLOR			0xEAEAEAFF
+# define BACKGROUND			0x22222200
+# define MENU_BACKGROUND	0x1E1E1EFF
+# define COLOR_TEN			0x9e0142ff
+# define COLOR_NINE			0xd53e4fff
+# define COLOR_EIGHT		0xf46d43ff
+# define COLOR_SEVEN		0xfdae61ff
+# define COLOR_SIX			0xfee08bff
+# define COLOR_FIVE			0xe6f598ff
+# define COLOR_FOUR			0xabdda4ff
+# define COLOR_THREE		0x66c2a5ff
+# define COLOR_TWO			0x3288bdff
+# define COLOR_ONE			0x5e4fa2ff
 
-typedef struct s_point /* Represent the 3d point */
+typedef struct s_point3d
+{
+	double	x;
+	double	y;
+	double	z;
+	int		mapcolor;
+	int		zcolor;
+} t_point3d;
+
+typedef struct s_point2d
 {
 	int		x;
 	int		y;
 	int		z;
-	int		color;
-} t_point;
-
-typedef struct s_camera
-{
-	double	zoom;
-	double	angle_x;
-	double	angle_y;
-	double	angle_z;
-	int		x_offset;
-	int		y_offset;
-	double	z_scale;
-	int		projection; // 0 = isometric, 1 = parallel, etc.
-}	t_camera;
+	int		rgba;
+} t_point2d;
 
 typedef struct s_map
 {
-	int			fd;                 /* file descriptor */
-	int			height;				/* Number of lines */	
-	int			width;				/* Number of columns */
-	float		zoom;
-	mlx_t		*mlx;				/* init the mlx42 */
-	mlx_image_t	*img;				/* Store the image */
-	t_point		**points;			/* 2d array of points */
-	float		elev_scale;
-	t_camera	camera;
+	int				rows;
+	int				cols;
+	int				high;
+	int				low;
+	bool			use_zcolor;
+	double			x_offset;
+	double			y_offset;
+	double			interval;
+	double			alpha;
+	double			beta;
+	double			xrotate;
+	double			yrotate;
+	double			zrotate;
+	double			zoom;
+	double			zscale;
+	t_point3d		**grid3d;
+	t_point2d		**grid2d;
 } t_map;
 
+typedef struct s_fdf
+{
+	mlx_t		*mlx;
+	t_map		*map;
+	mlx_image_t	*image;
+} t_fdf;
+
 bool	points_check(char *line);
-// char	**fdf_split(char const *s, char c);
-// int		count_tokens(const char *s, char c);
 int		ft_atoi_hex(const char *hex);
-int		process_line(t_map *map, char *line, int y);
 void	fill_point(t_point *p, char *data, int x, int y);
 void	parse_map(char *argv, t_map *map);
 void	loop_mlx(t_map *fdf);
-void	open_validate_map(char *argv, t_map *fdf);
-void	check_extension(char *filename);
-void	grid_check(t_map *map);
-void	remove_newline(char *line);
 void	project_all_points(t_map *map);
-// void	draw_line(t_point a, t_point b, mlx_image_t *img);
 void	draw_map(t_map *map);
-void	ft_error(char *str);
-void	ft_error_close(char *str, t_map *map);
 void	*free_array(char **array);
-// t_point	project_point(t_point p, t_map *map);
 void	clear_image(mlx_image_t *img);
 void	ft_hook_movement(void *param);
 
-void	read_map(char *filename, t_map *map);
-// void	put_pixel(t_image *img, int x, int y, int color);
-void	init_camera(t_camera *camera, t_map *map);
+int		process_line(int fd, t_map *map, char *line);
+char	remove_newline(char *line);
+void	grid_check(int fd, t_map *map);
+t_fdf	*init_fdf(char *filename);
+t_map	*open_validate_map(char *filename);
+void	ft_free_tab(void **tab, size_t len);
+void	free_map(t_map *map);
+void	ft_error_close(char *str, int fd);
+void	ft_error(char *str);
+int		check_extension(char *filename);
 #endif

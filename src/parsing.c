@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 17:00:31 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/10 18:24:44 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/15 22:42:38 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,48 +52,33 @@ void	fill_point(t_point *p, char *data, int x, int y)
 	// ft_printf("fill_point: x=%d y=%d z=%d color:%d\n", x, y, p->z, p->color); // DEBUG
 }
 
-int	process_line(t_map *map, char *line, int y)
+int	process_line(int fd, t_map *map, char *line)
 {
 	char	**split;
+	char	*tmp;
 	int		x;
 
-	remove_newline(line);
-	split = ft_split(line, ' ');
+	tmp = ft_strtrim(line, "\n");
+	if (!tmp)
+		return (free(line), 0); //TODO:
+	free(line);
+	split = ft_split(tmp, ' ');
 	if (!split)
-		return (free(line), 0);
+		return (free(tmp), 0); // TODO:
+							   
 	map->points[y] = malloc(sizeof(t_point) * map->width);
 	if (!map->points[y])
 		return (ft_free_array(split), free(line), 0);
 	x = 0;
-	while (x < map->width)
+	while (split[x])
 	{
+		map->high = ft_max(map->high, ft_atoi(split[x]));
+		map->low = ft_min(map->low, ft_atoi(split[x]));
 		// ft_printf("split[%d] = %s, y: %d\n", x, split[x], y);  // DEBUG
-		fill_point(&map->points[y][x], split[x], x, y);
+		// fill_point(&map->points[y][x], split[x], x, y);
 		x++;
 	}
 	ft_free_array(split);
 	free(line);
-	return (1);
-}
-
-void	parse_map(char *argv, t_map *map)
-{
-	char	*line;
-	int		y;
-
-	y = 0;
-	map->fd = open(argv, O_RDONLY);
-	if (map->fd < 0)
-		return ;
-	map->points = malloc(sizeof(t_point *) * map->height);
-	if (!map->points)
-		return ;
-	while ((line = get_next_line(map->fd)) && y < map->height)
-	{
-		if(!process_line(map, line, y))
-			break ;
-		y++;
-		// ft_printf("%d\n", y); // DEBUG
-	}
-	close (map->fd);
+	return (x);
 }

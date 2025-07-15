@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 09:19:38 by edlucca           #+#    #+#             */
-/*   Updated: 2025/06/25 10:18:28 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/15 22:40:25 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 // Pos add
 
 int		count_tokens(const char *s, char c);
+int		ft_min(int a, int b);
+int		ft_max(int a, int b);
 void	ft_free_array(char **array);
 
 #endif

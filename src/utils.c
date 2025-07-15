@@ -19,33 +19,61 @@ void ft_error(char *str)
 	exit(EXIT_FAILURE);
 }
 
-void ft_error_close(char *str, t_map *map)
+void	ft_free_tab(void **tab, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len && tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+void	free_map(t_map *map)
+{
+	if (!map)
+		return ;
+	if (map->grid2d)
+		ft_free_tab((void **)map->grid2d, map->rows);
+	if (map->grid3d)
+		ft_free_tab((void **)map->grid3d, map->rows);
+	free(map);
+}
+
+void ft_error_close(char *str, int fd)
 {
 	ft_printf("Error: %s\n", str);
-	close(map->fd);
+	close(fd);
 	exit(EXIT_FAILURE);
 }
 
-void remove_newline(char *line)
+char	remove_newline(char *line)
 {
-	int i = 0;
+	int		i;
+	char	*tmp;
 
-	if (!line)
-		return;
-	while (line[i])
+	i = 0;
+	tmp = line;
+	if (!tmp)
+		return (0);
+	while (tmp[i])
 	{
-		if (line[i] == '\n')
+		if (tmp[i] == '\n')
 		{
-			line[i] = '\0';
-			return;
+			tmp[i] = '\0';
+			return (tmp);
 		}
 		i++;
 	}
 }
 
-void	check_extension(char *filename)
+int	check_extension(char *filename)
 {
 	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
-		return ;
-	ft_error("not an .fdf file");
+		return (0);
+	else
+		return (1);
 }
