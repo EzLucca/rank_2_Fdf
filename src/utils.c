@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:55:58 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/09 17:18:49 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/16 14:37:44 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,30 +50,19 @@ void ft_error_close(char *str, int fd)
 	exit(EXIT_FAILURE);
 }
 
-char	remove_newline(char *line)
+void ft_error_map(char *str, int fd, t_map *map)
 {
-	int		i;
-	char	*tmp;
-
-	i = 0;
-	tmp = line;
-	if (!tmp)
-		return (0);
-	while (tmp[i])
-	{
-		if (tmp[i] == '\n')
-		{
-			tmp[i] = '\0';
-			return (tmp);
-		}
-		i++;
-	}
+	ft_printf("Error: %s\n", str);
+	close(fd);
+	free_map(map);
+	exit(EXIT_FAILURE);
 }
 
-int	check_extension(char *filename)
-{
-	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
-		return (0);
-	else
-		return (1);
-}
+
+// int	check_extension(char *filename)
+// {
+// 	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
+// 		return (0);
+// 	else
+// 		return (1);
+// }

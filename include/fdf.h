@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/10 18:23:49 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/16 14:48:16 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 # include <fcntl.h>
 # include <math.h>
 # include <string.h>
+# include <limits.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include "../lib/libft/include/libft.h"
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
@@ -85,25 +87,63 @@ typedef struct s_fdf
 	mlx_image_t	*image;
 } t_fdf;
 
-bool	points_check(char *line);
-int		ft_atoi_hex(const char *hex);
-void	fill_point(t_point *p, char *data, int x, int y);
-void	parse_map(char *argv, t_map *map);
-void	loop_mlx(t_map *fdf);
-void	project_all_points(t_map *map);
-void	draw_map(t_map *map);
 void	*free_array(char **array);
-void	clear_image(mlx_image_t *img);
-void	ft_hook_movement(void *param);
 
-int		process_line(int fd, t_map *map, char *line);
-char	remove_newline(char *line);
+// rotations.c
+void	rotate_x(double *y, double *z, double alpha);
+void	rotate_y(double *x, double *z, double beta);
+void	rotate_z(double *x, double *y, double gamma);
+
+// parsing.c
+int		ft_atoi_hex(const char *hex);
+int		fill_color(char *data, t_map *map, int fd);
+int		process_line(int fd, t_map *map, char *line, int y);
+void	parse_map(char *filename, t_map *map);
+void	allocate_grid(t_map *map);
+
+// main.c
 void	grid_check(int fd, t_map *map);
-t_fdf	*init_fdf(char *filename);
+void	init_map(t_map *map);
 t_map	*open_validate_map(char *filename);
+t_fdf	*init_fdf(char *filename);
+
+// checks.c
+bool	color_check(const char *color);
+bool	number_check(const char *str);
+bool	valid_point(char *token);
+bool	points_check(char *line);
+
+// image.c
+int		radiant(int begin, int end, double percent);
+int		get_color(t_point2d current, t_point2d a, t_point2d b);
+double	colormix(int begin, int end, int current);
+int		colors(double percent);
+void	set_zcolor(t_map *map);
+
+// hook.c
+void	ft_hook_project(void *param);
+void	ft_hook_rotate(void *param);
+void	ft_hook(void *param);
+void	ft_scroll_hook(double xdelta, double ydelta, void *param);
+void	resize_hook(int width, int height, void *param);
+
+// loop.c
+void	loop_mlx(t_fdf *fdf);
+void	reset_map(t_map *map);
+void	reset_draw(mlx_image_t *image);
+
+// draw.c
+void	bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b);
+void	project_point(t_map *map, int y, int x);
+void	draw_line(t_fdf *fdf, int x, int y);
+void	draw_image(t_fdf *fdf);
+void	display_menu(mlx_t *mlx);
+
+// utils.c
+void	ft_error(char *str);
 void	ft_free_tab(void **tab, size_t len);
 void	free_map(t_map *map);
 void	ft_error_close(char *str, int fd);
-void	ft_error(char *str);
-int		check_extension(char *filename);
+void	ft_error_map(char *str, int fd, t_map *map);
+// int		check_extension(char *filename);
 #endif

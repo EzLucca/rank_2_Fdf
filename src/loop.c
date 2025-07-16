@@ -6,69 +6,59 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:04:29 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/09 17:25:22 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/16 16:05:30 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-void render(void *param)
-{
-	t_map	*map;
 
-	map = (t_map *)param;
-	draw_map(map);
+void	reset_map(t_map *map)
+{
+	map->alpha = 0.46373398 / 2;
+	map->beta = 0.46373398;
+	map->xrotate = 0;
+	map->yrotate = 0;
+	map->zrotate = 0;
+	map->x_offset = WIDTH / 2;
+	map->y_offset = HEIGHT / 2;
+	map->zoom = 1;
+	map->zscale = 1;
+	map->use_zcolor = false;
 }
 
-static void key_hook(mlx_key_data_t key, void *param)
+void	reset_draw(mlx_image_t *image)
 {
-	t_map *	fdf;
+	uint32_t	i;
+	uint32_t	j;
 
-	fdf = (t_map*) param;
-	if (key.action == MLX_PRESS)
+	i = 0;
+	while (i < image->height)
 	{
-		if (key.key == MLX_KEY_ESCAPE)
-			mlx_close_window(fdf->mlx);
-	}
-}
-
-static void resize_hook(int width, int height, void *param)
-{
-	t_map	*fdf;
-	float	map_width;
-	float	map_height;
-
-	fdf = (t_map*) param;
-	if(fdf->img)
-		mlx_delete_image(fdf->mlx, fdf->img);
-	fdf->img = mlx_new_image(fdf->mlx, width, height);
-	mlx_image_to_window(fdf->mlx, fdf->img, 0, 0);
-	map_width = fdf->width * fdf->camera.zoom;
-	map_height = fdf->height * fdf->camera.zoom;
-	fdf->camera.x_offset = (width / 2) - (map_width / 2);
-	fdf->camera.y_offset = (height / 2) - (map_height / 2);
-}
-
-void loop_mlx(t_map *fdf)
-{
-	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
-	if (fdf->mlx != NULL)
-	{
-		fdf->img = mlx_new_image(fdf->mlx, fdf->mlx->width, fdf->mlx->height);
-		if (fdf->img != NULL)
+		j = 0;
+		while (j < image->width)
 		{
-			if(mlx_image_to_window(fdf->mlx, fdf->img, 0, 0) != -1)
-			{
-				mlx_loop_hook(fdf->mlx, &ft_hook_movement, fdf);
-				mlx_key_hook(fdf->mlx, key_hook, fdf);
-				mlx_loop_hook(fdf->mlx, &render, fdf);
-				mlx_resize_hook(fdf->mlx, resize_hook, fdf);
-				// mlx_scroll_hook(fdf->mlx, scroll_hook, fdf);
-				// if (mlx_loop_hook(fdf->mlx, loop_hook, fdf))
-				mlx_loop(fdf->mlx);
-			}
+			mlx_put_pixel(image, j, i, BACKGROUND);
+			j++;
 		}
-		mlx_delete_image(fdf->mlx, fdf->img);
+		i++;
 	}
-	mlx_terminate(fdf->mlx);
 }
+
+// void	loop_mlx(t_fdf *fdf)
+// {
+// 	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
+// 	{
+// 		free_map(fdf->map);
+// 		mlx_close_window(fdf->mlx);
+// 		// ft_error(mlx_strerror(mlx_errno));
+// 		ft_error("error image");
+// 	}
+// 	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
+// 	mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
+// 	mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
+// 	mlx_scroll_hook(fdf->mlx, &ft_scroll_hook, fdf);
+// 	mlx_loop(fdf->mlx);
+// 	mlx_delete_image(fdf->mlx, fdf->image);
+// 	mlx_terminate(fdf->mlx);
+// }
