@@ -24,7 +24,6 @@ void	grid_check(int fd, t_map *map)
 	{
 		line = ft_strtrim(tmp, "\n");
 		free(tmp);
-		// ft_printf("line: %s\n", line); // DEBUG
 		if (!points_check(line))
 			ft_error_close("Invalid point.", fd);
 		map->rows++;
@@ -36,7 +35,6 @@ void	grid_check(int fd, t_map *map)
 			free(line);
 			ft_error_close("Couldn't read file", fd);
 		}
-		// ft_printf("Map cols = %d line = %s\n", current_column, line); // DEBUG
 		free(line);
 	}
 	return ;
@@ -69,18 +67,24 @@ t_map	*open_validate_map(char *filename)
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		ft_error_close("Can't open file.", fd);
+		ft_error("Can't open file.");
 	map = malloc(sizeof(t_map));
 	if (!map)
 		ft_error_close("Cannot malloc for map.", fd);
 	init_map(map);
 	grid_check(fd, map); 
+	// ft_printf("cols = %d rows = %d\n",map->cols, map->rows); // TESTING:
 	close(fd);
 	allocate_grid(map); //TODO:
 	map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
 	map->interval = ft_max(2, map->interval);
-	parse_map(filename, map);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		ft_error("Can't open file.");
+	parse_map(fd, map);
+	close(fd);
 	set_zcolor(map);
+	// ft_printf("test3\n"); // TESTING:
 	return (map);
 }
 
@@ -89,7 +93,9 @@ t_fdf	*init_fdf(char *filename)
 	static t_fdf	fdf;
 
 	fdf.map = open_validate_map(filename);
+	// ft_printf("test2\n"); // TESTING:
 	fdf.mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
+	// ft_printf("test1"); // TESTING:
 	if (!fdf.mlx)
 	{
 		free_map(fdf.map);
@@ -97,6 +103,7 @@ t_fdf	*init_fdf(char *filename)
 		ft_error("Error: fdf.mlx");
 	}
 	fdf.image = mlx_new_image(fdf.mlx, WIDTH, HEIGHT);
+	// ft_printf("test4\n"); // TESTING:
 	if (!fdf.image)
 	{
 		free_map(fdf.map);
@@ -116,6 +123,7 @@ int	main(int argc, char **argv)
 		ft_error("Correct usage: ./fdf <map_name>.fdf");
 	fdf = init_fdf(argv[1]);
 	display_menu(fdf->mlx);
+	// ft_printf("test"); // TESTING:
 	draw_image(fdf);
 	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
 	{
@@ -128,9 +136,11 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
 	mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
 	mlx_scroll_hook(fdf->mlx, &ft_scroll_hook, fdf);
+	mlx_loop_hook(fdf->mlx, &draw_image, fdf);
 	mlx_loop(fdf->mlx);
-	mlx_delete_image(fdf->mlx, fdf->image);
+	// mlx_delete_image(fdf->mlx, fdf->image);
 	mlx_terminate(fdf->mlx);
 	// loop_mlx(fdf);
+	free_map(fdf->map);
 	return (EXIT_SUCCESS);
 }

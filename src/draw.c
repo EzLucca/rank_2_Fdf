@@ -73,16 +73,19 @@ void	draw_line(t_fdf *fdf, int x, int y)
 	}
 	if (x + 1 < fdf->map->cols)
 	{
-		project_point(fdf->map, y, x + 1);
+		if (y == 0)
+			project_point(fdf->map, y, x + 1);
 		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
 	}
 }
 
-void	draw_image(t_fdf *fdf)
+void	draw_image(void *param)
 {
 	int		i;
 	int		j;
+	t_fdf	*fdf;
 
+	fdf = (t_fdf *)param;
 	reset_draw(fdf->image);
 	i = 0;
 	while (i < fdf->map->rows)

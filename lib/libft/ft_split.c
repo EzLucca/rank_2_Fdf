@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "include/libft.h"
 
 //This should return the len of the substring
 static int	substr_len(char const *s, char c)
@@ -58,10 +58,11 @@ static void	*free_array(char **array)
 }
 
 //Split the string in substring
-char	**ft_split(char const *s, char c)
+char **ft_split(char const *s, char c)
 {
 	char	**array;
 	int		i;
+	int		len;
 
 	if (!s)
 		return (NULL);
@@ -73,10 +74,12 @@ char	**ft_split(char const *s, char c)
 	{
 		if (*s != c)
 		{
-			array[i] = ft_substr(s, 0, substr_len(s, c));
-			if (!array[i++])
+			len = substr_len(s, c);
+			array[i] = ft_substr(s, 0, len);
+			if (!array[i])
 				return (free_array(array));
-			s += substr_len(s, c);
+			i++;
+			s += len;
 		}
 		else
 			s++;

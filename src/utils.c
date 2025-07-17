@@ -58,11 +58,8 @@ void ft_error_map(char *str, int fd, t_map *map)
 	exit(EXIT_FAILURE);
 }
 
-
-// int	check_extension(char *filename)
-// {
-// 	if(ft_strnstr(filename, ".fdf", ft_strlen(filename)))
-// 		return (0);
-// 	else
-// 		return (1);
-// }
+void	ft_upper(unsigned int i, char *c)
+{
+	i++;
+	*c = ft_toupper(*c);
+}

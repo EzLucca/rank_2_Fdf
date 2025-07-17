@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "include/libft.h"
 
 // Allocates with malloc(3)) and returns a substring from the string ’s’. 
 // The substring starts at index ’start’ and has a maximum length of ’len’.

@@ -27,7 +27,7 @@
 # define BPP sizeof(int32_t)
 # define WIDTH 1280 /* Initial window width */
 # define HEIGHT 720 /* Initial window height */
-# define TITLE "fdf" /* Text shown in window title bar */
+# define TITLE "Fdf" /* Text shown in window title bar */
 # define TEXT_COLOR			0xEAEAEAFF
 # define BACKGROUND			0x22222200
 # define MENU_BACKGROUND	0x1E1E1EFF
@@ -97,8 +97,8 @@ void	rotate_z(double *x, double *y, double gamma);
 // parsing.c
 int		ft_atoi_hex(const char *hex);
 int		fill_color(char *data, t_map *map, int fd);
-int		process_line(int fd, t_map *map, char *line, int y);
-void	parse_map(char *filename, t_map *map);
+void	process_points(int fd, t_map *map, char **split, int y);
+void	parse_map(int fd, t_map *map);
 void	allocate_grid(t_map *map);
 
 // main.c
@@ -136,7 +136,7 @@ void	reset_draw(mlx_image_t *image);
 void	bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b);
 void	project_point(t_map *map, int y, int x);
 void	draw_line(t_fdf *fdf, int x, int y);
-void	draw_image(t_fdf *fdf);
+void	draw_image(void *param);
 void	display_menu(mlx_t *mlx);
 
 // utils.c
@@ -145,5 +145,6 @@ void	ft_free_tab(void **tab, size_t len);
 void	free_map(t_map *map);
 void	ft_error_close(char *str, int fd);
 void	ft_error_map(char *str, int fd, t_map *map);
+void	ft_upper(unsigned int i, char *c);
 // int		check_extension(char *filename);
 #endif
