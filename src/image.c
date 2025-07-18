@@ -82,14 +82,11 @@ void	set_zcolor(t_map *map)
 	while (i < map->rows)
 	{
 		j = 0;
-		// ft_printf("cols: %d\n", map->cols); // TESTING:
 		while (j < map->cols)
 		{
-			// ft_printf("test4\n"); // TESTING:
 			percent = colormix(map->low, map->high, map->grid3d[i][j].z);
 			map->grid3d[i][j].zcolor = colors(percent);
 			j++;
-		// ft_printf("color: %d\n", map->grid3d[i][j].zcolor); // TESTING:
 		}
 		i++;
 	}

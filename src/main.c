@@ -37,23 +37,24 @@ void	grid_check(int fd, t_map *map)
 		}
 		free(line);
 	}
+	ft_printf("**grid_check**\ncol: %d rows: %d\n", map->cols, map->rows); // TESTING:
 	return ;
 }
 
 void	init_map(t_map *map)
 {
-	map->alpha = 0.46373398 / 2;
+	map->alpha = 0.46373398 / 2; // Rotation angle
 	map->beta = 0.46373398;
 	map->xrotate = 0;
 	map->yrotate = 0;
 	map->zrotate = 0;
-	map->x_offset = WIDTH / 2;
-	map->y_offset = HEIGHT / 2;
-	map->zoom = 1;
-	map->zscale = 1;
+	map->x_offset = WIDTH / 2;  // For centering the image
+	map->y_offset = HEIGHT / 2; // For centering the image
+	map->zoom = 1; // Zoom factor
+	map->zscale = 1; // Scale the z axis for depth or elevation
 	map->use_zcolor = false;
-	map->high = INT_MIN;
-	map->low = INT_MAX;
+	map->high = INT_MIN; // tracks the highest z_value
+	map->low = INT_MAX; // tracks the lowest z_value
 	map->rows = 0;
 	map->cols = 0;
 	map->grid2d = NULL;
@@ -73,18 +74,16 @@ t_map	*open_validate_map(char *filename)
 		ft_error_close("Cannot malloc for map.", fd);
 	init_map(map);
 	grid_check(fd, map); 
-	// ft_printf("cols = %d rows = %d\n",map->cols, map->rows); // TESTING:
 	close(fd);
 	allocate_grid(map); //TODO:
-	map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
-	map->interval = ft_max(2, map->interval);
+						// map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
+						// map->interval = ft_max(2, map->interval);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		ft_error("Can't open file.");
+		ft_error("Can't re-open file.");
 	parse_map(fd, map);
 	close(fd);
 	set_zcolor(map);
-	// ft_printf("test3\n"); // TESTING:
 	return (map);
 }
 
@@ -93,22 +92,17 @@ t_fdf	*init_fdf(char *filename)
 	static t_fdf	fdf;
 
 	fdf.map = open_validate_map(filename);
-	// ft_printf("test2\n"); // TESTING:
 	fdf.mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
-	// ft_printf("test1"); // TESTING:
 	if (!fdf.mlx)
 	{
 		free_map(fdf.map);
-		// ft_error(mlx_strerror(mlx_errno));
 		ft_error("Error: fdf.mlx");
 	}
 	fdf.image = mlx_new_image(fdf.mlx, WIDTH, HEIGHT);
-	// ft_printf("test4\n"); // TESTING:
 	if (!fdf.image)
 	{
 		free_map(fdf.map);
 		mlx_close_window(fdf.mlx);
-		// ft_error(mlx_strerror(mlx_errno));
 		ft_error("Error: fdf.image");
 	}
 	return (&fdf);
@@ -123,13 +117,11 @@ int	main(int argc, char **argv)
 		ft_error("Correct usage: ./fdf <map_name>.fdf");
 	fdf = init_fdf(argv[1]);
 	display_menu(fdf->mlx);
-	// ft_printf("test"); // TESTING:
 	draw_image(fdf);
 	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
 	{
 		free_map(fdf->map);
 		mlx_close_window(fdf->mlx);
-		// ft_error(mlx_strerror(mlx_errno));
 		ft_error("error image");
 	}
 	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
@@ -138,9 +130,7 @@ int	main(int argc, char **argv)
 	mlx_scroll_hook(fdf->mlx, &ft_scroll_hook, fdf);
 	mlx_loop_hook(fdf->mlx, &draw_image, fdf);
 	mlx_loop(fdf->mlx);
-	// mlx_delete_image(fdf->mlx, fdf->image);
 	mlx_terminate(fdf->mlx);
-	// loop_mlx(fdf);
 	free_map(fdf->map);
 	return (EXIT_SUCCESS);
 }

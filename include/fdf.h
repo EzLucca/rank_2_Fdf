@@ -66,11 +66,11 @@ typedef struct s_map
 	int				high;
 	int				low;
 	bool			use_zcolor;
-	double			x_offset;
-	double			y_offset;
-	double			interval;
 	double			alpha;
 	double			beta;
+	double			interval;
+	double			x_offset;
+	double			y_offset;
 	double			xrotate;
 	double			yrotate;
 	double			zrotate;
@@ -97,7 +97,7 @@ void	rotate_z(double *x, double *y, double gamma);
 // parsing.c
 int		ft_atoi_hex(const char *hex);
 int		fill_color(char *data, t_map *map, int fd);
-void	process_points(int fd, t_map *map, char **split, int y);
+void	process_points(int fd, t_map *map, char *line, int y);
 void	parse_map(int fd, t_map *map);
 void	allocate_grid(t_map *map);
 
