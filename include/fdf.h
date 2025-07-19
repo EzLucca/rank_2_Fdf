@@ -105,7 +105,7 @@ void	allocate_grid(t_map *map);
 void	grid_check(int fd, t_map *map);
 void	init_map(t_map *map);
 t_map	*open_validate_map(char *filename);
-t_fdf	*init_fdf(char *filename);
+void	init_fdf(char *filename, t_fdf *fdf);
 
 // checks.c
 bool	color_check(const char *color);

@@ -73,7 +73,7 @@ t_map	*open_validate_map(char *filename)
 	if (!map)
 		ft_error_close("Cannot malloc for map.", fd);
 	init_map(map);
-	grid_check(fd, map); 
+	grid_check(fd, map);  // checkar free map em caso de erro
 	close(fd);
 	allocate_grid(map); //TODO:
 						// map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
@@ -87,25 +87,22 @@ t_map	*open_validate_map(char *filename)
 	return (map);
 }
 
-t_fdf	*init_fdf(char *filename)
+void	init_fdf(char *filename, t_fdf	*fdf)
 {
-	static t_fdf	fdf;
-
-	fdf.map = open_validate_map(filename);
-	fdf.mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
-	if (!fdf.mlx)
+	fdf->map = open_validate_map(filename);
+	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
+	if (!fdf->mlx)
 	{
-		free_map(fdf.map);
+		free_map(fdf->map);
 		ft_error("Error: fdf.mlx");
 	}
-	fdf.image = mlx_new_image(fdf.mlx, WIDTH, HEIGHT);
-	if (!fdf.image)
+	fdf->image = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
+	if (!fdf->image)
 	{
-		free_map(fdf.map);
-		mlx_close_window(fdf.mlx);
+		free_map(fdf->map);
+		mlx_close_window(fdf->mlx);
 		ft_error("Error: fdf.image");
 	}
-	return (&fdf);
 }
 
 int	main(int argc, char **argv)
@@ -113,9 +110,11 @@ int	main(int argc, char **argv)
 
 	t_fdf	*fdf;
 
+	// fdf = NULL;
+	ft_bzero(&fdf, sizeof(t_fdf));
 	if (argc != 2 || !ft_strnstr(argv[1], ".fdf", ft_strlen(argv[1])))
 		ft_error("Correct usage: ./fdf <map_name>.fdf");
-	fdf = init_fdf(argv[1]);
+	init_fdf(argv[1], fdf);
 	display_menu(fdf->mlx);
 	draw_image(fdf);
 	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)

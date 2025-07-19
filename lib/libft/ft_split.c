@@ -63,10 +63,12 @@ char **ft_split(char const *s, char c)
 	char	**array;
 	int		i;
 	int		len;
+	int		tokens;
 
 	if (!s)
 		return (NULL);
-	array = malloc(sizeof(char *) * (count_tokens(s, c) + 1));
+	tokens = count_tokens(s, c);
+	array = ft_calloc(tokens + 1, sizeof(char *));
 	if (!array)
 		return (NULL);
 	i = 0;

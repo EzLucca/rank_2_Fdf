@@ -31,10 +31,10 @@ double	colormix(int begin, int end, int current)
 
 int	get_color(t_point2d current, t_point2d a, t_point2d b)
 {
-	int	red;
-	int	green;
-	int	blue;
-	int	percent;
+	int		red;
+	int		green;
+	int		blue;
+	double	percent;
 
 	if(a.rgba == b.rgba)
 		return (a.rgba);

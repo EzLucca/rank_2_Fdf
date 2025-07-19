@@ -16,16 +16,14 @@ void	ft_free_array(char **array)
 {
 	int	i;
 
+	if (!array)
+		return;
 	i = 0;
-	if (array)
+	while (array[i])
 	{
-		while (array[i])
-		{
-			free (array[i]);
-			array[i] = NULL;
-			i++;
-		}
-		free (array);
+		free (array[i]);
+		array[i] = NULL;
+		i++;
 	}
-	return ;
+	free (array);
 }

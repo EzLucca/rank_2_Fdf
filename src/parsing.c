@@ -34,7 +34,7 @@ int	fill_color(char *data, t_map *map, int fd)
 
 void	process_points(int fd, t_map *map, char *line, int i)
 {
-	t_point3d	*point;
+	// t_point3d	*point;
 	// int			x_offet;
 	// int			y_offset;
 	int			j;
@@ -45,24 +45,16 @@ void	process_points(int fd, t_map *map, char *line, int i)
 	if (!split)
 		ft_error_map("split error.", fd, map);
 	j = 0;
-	// while (split[j])
-	// {
-	// 	ft_printf("split[%d]: %s\n", j, split[j]); // TESTING: Ok
-	// 	j++;
-	// }
-	// x_offset = (map->cols - 1) * map->interval / 2;
-	// y_offset = (map->rows - 1) * map->interval / 2;
 	while (j < map->cols)
 	{
-		point = &(map->grid3d[i][j]);
-		point->x = (double)j /* (map->interval) - x_offset*/;
-		point->y = (double)i /* (map->interval) - y_offset*/;
-		point->z = (double)ft_atoi(split[j]) /* (map->interval)*/;
-		printf("x: %f y: %f z: %f\n", point->x, point->y, point->z); // TESTING:
-		map->high = ft_max(map->high, point->z);
-		map->low = ft_min(map->low, point->z);
-		point->mapcolor = fill_color(split[j], map, fd);
-		printf("z: %f color: %d\n", point->z, point->mapcolor);
+		map->grid3d[i][j].x = (double)j;
+		map->grid3d[i][j].y = (double)i;
+		map->grid3d[i][j].z = (double)ft_atoi(split[j]);
+		map->grid3d[i][j].mapcolor = fill_color(split[j], map, fd);
+		map->high = ft_max(map->high, map->grid3d[i][j].z);
+		map->low = ft_min(map->low, map->grid3d[i][j].z);
+		// printf("x: %f y: %f z: %f color: %d\n", map->grid3d[i][j].x, map->grid3d[i][j].y, map->grid3d[i][j].z, map->grid3d[i][j].mapcolor); // TESTING:
+																									  // printf("z: %f color: %d\n", point->z, point->mapcolor);
 		j++;
 	}
 	ft_free_array(split);
@@ -83,8 +75,8 @@ void	parse_map(int fd, t_map *map)
 			ft_error_map("Gnl error.", fd, map);
 		line = ft_strtrim(tmp,"\n");
 		free(tmp);
-		if (!line)
-			ft_error_map("ft_strtrim error.", fd, map);
+		// if (!line)
+		// 	ft_error_map("ft_strtrim error.", fd, map);
 		// ft_printf("line: %s\n", line); // TESTING: OK
 		process_points(fd, map, line, y);
 		y++;
@@ -96,8 +88,8 @@ void	allocate_grid(t_map *map)
 {
 	int	i;
 
-	map->grid3d = malloc(sizeof(t_point3d *) * map->rows);
-	map->grid2d = malloc(sizeof(t_point2d *) * map->rows);
+	map->grid3d = malloc(sizeof(t_point3d) * map->rows);
+	map->grid2d = malloc(sizeof(t_point2d) * map->rows);
 	// printf("rows: %d\n", map->rows); // TESTING:
 	if (!(map->grid2d) || !(map->grid3d))
 	{
@@ -107,8 +99,8 @@ void	allocate_grid(t_map *map)
 	i = -1;
 	while (++i < map->rows)
 	{
-		map->grid3d[i] = malloc(sizeof(t_point3d *) * map->cols);
-		map->grid2d[i] = malloc(sizeof(t_point2d *) * map->cols);
+		map->grid3d[i] = malloc(sizeof(t_point3d) * map->cols);
+		map->grid2d[i] = malloc(sizeof(t_point2d) * map->cols);
 		// printf("cols: %d\n", map->cols); // TESTING:
 		if (!(map->grid2d[i]) || !(map->grid3d[i]))
 		{

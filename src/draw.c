@@ -92,7 +92,11 @@ void	draw_image(void *param)
 	{
 		j = 0;
 		while (j < fdf->map->cols)
+		{
 			draw_line(fdf, j, i);
+		j++;
+		}
+		i++;
 	}
 }
 
