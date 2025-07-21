@@ -12,7 +12,6 @@
 
 #include "../include/fdf.h"
 
-// TODO:
 void	grid_check(int fd, t_map *map)
 {
 	char	*line;
@@ -108,28 +107,27 @@ void	init_fdf(char *filename, t_fdf	*fdf)
 int	main(int argc, char **argv)
 {
 
-	t_fdf	*fdf;
+	t_fdf	fdf;
 
-	// fdf = NULL;
-	ft_bzero(&fdf, sizeof(t_fdf));
 	if (argc != 2 || !ft_strnstr(argv[1], ".fdf", ft_strlen(argv[1])))
 		ft_error("Correct usage: ./fdf <map_name>.fdf");
-	init_fdf(argv[1], fdf);
-	display_menu(fdf->mlx);
-	draw_image(fdf);
-	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
+	ft_bzero(&fdf, sizeof(fdf));
+	init_fdf(argv[1], &fdf);
+	display_menu(fdf.mlx);
+	draw_image(&fdf);
+	if(mlx_image_to_window(fdf.mlx, fdf.image, 0, 0) == -1)
 	{
-		free_map(fdf->map);
-		mlx_close_window(fdf->mlx);
+		free_map(fdf.map);
+		mlx_close_window(fdf.mlx);
 		ft_error("error image");
 	}
-	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
-	mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
-	mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
-	mlx_scroll_hook(fdf->mlx, &ft_scroll_hook, fdf);
-	mlx_loop_hook(fdf->mlx, &draw_image, fdf);
-	mlx_loop(fdf->mlx);
-	mlx_terminate(fdf->mlx);
-	free_map(fdf->map);
+	mlx_loop_hook(fdf.mlx, &ft_hook, &fdf);
+	mlx_loop_hook(fdf.mlx, &ft_hook_rotate, &fdf);
+	mlx_loop_hook(fdf.mlx, &ft_hook_project, &fdf);
+	mlx_scroll_hook(fdf.mlx, &ft_scroll_hook, &fdf);
+	mlx_loop_hook(fdf.mlx, &draw_image, &fdf);
+	mlx_loop(fdf.mlx);
+	mlx_terminate(fdf.mlx);
+	free_map(fdf.map);
 	return (EXIT_SUCCESS);
 }

@@ -1,5 +1,5 @@
 CC       := cc
-CFLAGS   := -Wall -Wextra -Werror -O0 -g
+CFLAGS   := -O0 -g -Wall -Wextra -Werror 
 LDFLAGS  := -ldl -lglfw -lm
 
 NAME     := fdf
