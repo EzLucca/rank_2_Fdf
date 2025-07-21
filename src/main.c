@@ -74,9 +74,9 @@ t_map	*open_validate_map(char *filename)
 	init_map(map);
 	grid_check(fd, map);  // checkar free map em caso de erro
 	close(fd);
-	allocate_grid(map); //TODO:
-						// map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
-						// map->interval = ft_max(2, map->interval);
+	allocate_grid(map);
+	// map->interval = ft_min(WIDTH / map->cols, HEIGHT / map->rows) / 2;
+	// map->interval = ft_max(2, map->interval);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		ft_error("Can't re-open file.");
@@ -104,6 +104,16 @@ void	init_fdf(char *filename, t_fdf	*fdf)
 	}
 }
 
+void loop_handler(void *param)
+{
+	t_fdf *fdf = (t_fdf *)param;
+
+	ft_hook(fdf);
+	ft_hook_rotate(fdf);
+	ft_hook_project(fdf);
+	draw_image(fdf); // Or only when needed
+}
+
 int	main(int argc, char **argv)
 {
 
@@ -121,11 +131,12 @@ int	main(int argc, char **argv)
 		mlx_close_window(fdf.mlx);
 		ft_error("error image");
 	}
-	mlx_loop_hook(fdf.mlx, &ft_hook, &fdf);
-	mlx_loop_hook(fdf.mlx, &ft_hook_rotate, &fdf);
-	mlx_loop_hook(fdf.mlx, &ft_hook_project, &fdf);
+	// mlx_loop_hook(fdf.mlx, &ft_hook, &fdf);
+	// mlx_loop_hook(fdf.mlx, &ft_hook_rotate, &fdf);
+	// mlx_loop_hook(fdf.mlx, &ft_hook_project, &fdf);
+	// mlx_loop_hook(fdf.mlx, &draw_image, &fdf);
+	mlx_loop_hook(fdf.mlx, loop_handler, &fdf);
 	mlx_scroll_hook(fdf.mlx, &ft_scroll_hook, &fdf);
-	mlx_loop_hook(fdf.mlx, &draw_image, &fdf);
 	mlx_loop(fdf.mlx);
 	mlx_terminate(fdf.mlx);
 	free_map(fdf.map);
