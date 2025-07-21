@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 14:48:16 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/21 22:14:08 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,18 @@ typedef struct s_point2d
 	int		z;
 	int		rgba;
 } t_point2d;
+
+typedef struct s_bresenham
+{
+	int         dx;
+    int         dy;
+    int         sx;
+    int         sy;
+    int         err;
+    t_point2d   cur;
+    t_point2d   b;
+    t_point2d   a;
+} t_bresenham;
 
 typedef struct s_map
 {
@@ -125,6 +137,7 @@ void	ft_hook_project(void *param);
 void	ft_hook_rotate(void *param);
 void	ft_hook(void *param);
 void	ft_scroll_hook(double xdelta, double ydelta, void *param);
+void	loop_handler(void *param);
 void	resize_hook(int width, int height, void *param);
 
 // loop.c
@@ -137,7 +150,6 @@ void	bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b);
 void	project_point(t_map *map, int y, int x);
 void	draw_line(t_fdf *fdf, int x, int y);
 void	draw_image(void *param);
-void	display_menu(mlx_t *mlx);
 
 // utils.c
 void	ft_error(char *str);
@@ -146,5 +158,8 @@ void	free_map(t_map *map);
 void	ft_error_close(char *str, int fd);
 void	ft_error_map(char *str, int fd, t_map *map);
 void	ft_upper(unsigned int i, char *c);
-// int		check_extension(char *filename);
+
+// utils2.c
+void	display_menu(mlx_t *mlx);
+
 #endif

@@ -36,7 +36,6 @@ void	grid_check(int fd, t_map *map)
 		}
 		free(line);
 	}
-	ft_printf("**grid_check**\ncol: %d rows: %d\n", map->cols, map->rows); // TESTING:
 	return ;
 }
 
@@ -104,16 +103,6 @@ void	init_fdf(char *filename, t_fdf	*fdf)
 	}
 }
 
-void loop_handler(void *param)
-{
-	t_fdf *fdf = (t_fdf *)param;
-
-	ft_hook(fdf);
-	ft_hook_rotate(fdf);
-	ft_hook_project(fdf);
-	draw_image(fdf); // Or only when needed
-}
-
 int	main(int argc, char **argv)
 {
 
@@ -124,7 +113,6 @@ int	main(int argc, char **argv)
 	ft_bzero(&fdf, sizeof(fdf));
 	init_fdf(argv[1], &fdf);
 	display_menu(fdf.mlx);
-	ft_printf("teste\n"); // TESTING
 	draw_image(&fdf);
 	if(mlx_image_to_window(fdf.mlx, fdf.image, 0, 0) == -1)
 	{
@@ -132,10 +120,6 @@ int	main(int argc, char **argv)
 		mlx_close_window(fdf.mlx);
 		ft_error("error image");
 	}
-	// mlx_loop_hook(fdf.mlx, &ft_hook, &fdf);
-	// mlx_loop_hook(fdf.mlx, &ft_hook_rotate, &fdf);
-	// mlx_loop_hook(fdf.mlx, &ft_hook_project, &fdf);
-	// mlx_loop_hook(fdf.mlx, &draw_image, &fdf);
 	mlx_loop_hook(fdf.mlx, loop_handler, &fdf);
 	mlx_scroll_hook(fdf.mlx, &ft_scroll_hook, &fdf);
 	mlx_loop(fdf.mlx);

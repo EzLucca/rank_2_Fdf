@@ -6,44 +6,100 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 17:11:00 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 14:44:01 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/21 22:33:33 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-// TODO:
-void bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b)
+void	bresenham_init(t_point2d a, t_point2d b)
 {
-	int dx = abs(b.x - a.x);
-	int dy = -abs(b.y - a.y);
-	int sx = (a.x < b.x) ? 1 : -1;
-	int sy = (a.y < b.y) ? 1 : -1;
-	int err = dx + dy; // error value e_xy
+	t_bresenham jack;
 
-	t_point2d cur = a;
-
-	while (true)
-	{
-		if ((uint32_t)cur.x < image->width && (uint32_t)cur.y < image->height)
-			mlx_put_pixel(image, cur.x, cur.y, get_color(cur, a, b));
-		
-		if (cur.x == b.x && cur.y == b.y)
-			break;
-		
-		int e2 = 2 * err;
-		if (e2 >= dy)
-		{
-			err += dy;
-			cur.x += sx;
-		}
-		if (e2 <= dx)
-		{
-			err += dx;
-			cur.y += sy;
-		}
-	}
+	jack.dx = abs(b.x - a.x);
+	jack.dy = -abs(b.y - a.y);
+	if (a.x < b.x)
+		jack.sx = 1;
+	else
+		jack.sx = -1;
+	if (a.y < b.y)
+		jack.sy = 1;
+	else
+		jack.sy = -1;
+	jack.err = jack.dx + jack.dy;
+	jack.cur = a;
+	jack.b = b;
+	jack.a = a;
 }
+
+void bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
+{
+    int			e2;
+	t_bresenham jack;
+
+	ft_bzero(&jack, sizeof(t_bresenham));
+	bresenham_init(a, b);
+    while (1) // Use 1 for true, as true might be a macro
+    {
+        // Boundary check before drawing
+        if ((uint32_t)jack.cur.x < image->width && \
+            (uint32_t)jack.cur.y < image->height)
+        {
+            mlx_put_pixel(image, jack.cur.x, jack.cur.y, \
+                          get_color(jack.cur, jack.a, jack.b));
+        }
+
+        if (jack.cur.x == jack.b.x && jack.cur.y == jack.b.y)
+            break;
+
+        e2 = 2 * jack.err;
+
+        if (e2 >= jack.dy)
+        {
+            jack.err += jack.dy;
+            jack.cur.x += jack.sx;
+        }
+
+        if (e2 <= jack.dx)
+        {
+            jack.err += jack.dx;
+            jack.cur.y += jack.sy;
+        }
+    }
+} // Total lines: ~2
+
+// void bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b)
+// {
+// 	int dx;
+// 	int dy;
+// 	int sx;
+// 	int sy;
+// 	int err; // error value e_xy
+// 	t_point2d cur;
+//
+// 	sx = (a.x < b.x) ? 1 : -1;
+// 	sy = (a.y < b.y) ? 1 : -1;
+// 	err = dx + dy; // error value e_xy
+// 	cur = a;
+// 	while (true)
+// 	{
+// 		if ((uint32_t)cur.x < image->width && (uint32_t)cur.y < image->height)
+// 			mlx_put_pixel(image, cur.x, cur.y, get_color(cur, a, b));
+// 		if (cur.x == b.x && cur.y == b.y)
+// 			break;
+// 		int e2 = 2 * err;
+// 		if (e2 >= dy)
+// 		{
+// 			err += dy;
+// 			cur.x += sx;
+// 		}
+// 		if (e2 <= dx)
+// 		{
+// 			err += dx;
+// 			cur.y += sy;
+// 		}
+// 	}
+// }
 
 void	project_point(t_map *map, int y, int x)
 {
@@ -74,13 +130,15 @@ void	draw_line(t_fdf *fdf, int x, int y)
 	if (y + 1 < fdf->map->rows)
 	{
 		project_point(fdf->map, y + 1, x);
-		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
+		bresenham_draw(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
+		// bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
 	}
 	if (x + 1 < fdf->map->cols)
 	{
 		if (y == 0)
 			project_point(fdf->map, y, x + 1);
-		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
+		bresenham_draw(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
+		// bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
 	}
 }
 
@@ -103,28 +161,4 @@ void	draw_image(void *param)
 		}
 		i++;
 	}
-}
-
-void	display_menu(mlx_t *mlx)
-{
-	int		x;
-	int		y;
-
-	x = 20;
-	y = 20;
-	mlx_put_string(mlx, "CONTROLS", x, y);
-	mlx_put_string(mlx, "Colour\t\t\t\t\t\t\t\tc", x, y += 35);
-	mlx_put_string(mlx, "Zoom\t\t\t\t\t\t\t\t\t\tmouse scroll or -+", x, y += 20);
-	mlx_put_string(mlx, "Translate\t\t\t\t\tarrow keys", x, y += 20);
-	mlx_put_string(mlx, "Scale z\t\t\t\t\t\t\ts + </>", x, y += 20);
-	mlx_put_string(mlx, "Rotate x\t\t\t\t\t\tx + </>", x, y += 20);
-	mlx_put_string(mlx, "Rotate y\t\t\t\t\t\tc + </>", x, y += 20);
-	mlx_put_string(mlx, "Rotate z\t\t\t\t\t\tz + </>", x, y += 20);
-	mlx_put_string(mlx, "PROJECTION", x, y += 30);
-	mlx_put_string(mlx, "Angle x\t\t\t\t\t\t\tq + </>", x, y += 25);
-	mlx_put_string(mlx, "Angle y\t\t\t\t\t\t\tw + </>", x, y += 20);
-	mlx_put_string(mlx, "Isometric\t\t\t\t\t1", x, y += 20);
-	mlx_put_string(mlx, "Dimetric\t\t\t\t\t\t2", x, y += 20);
-	mlx_put_string(mlx, "Trimetric\t\t\t\t\t3", x, y += 20);
-	mlx_put_string(mlx, "RESET\t\t\t\t\t\t\t\t\t0", x, y += 30);
 }
