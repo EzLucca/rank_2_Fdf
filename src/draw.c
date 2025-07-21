@@ -12,30 +12,35 @@
 
 #include "../include/fdf.h"
 
-void	bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b)
+// TODO:
+void bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b)
 {
-	int			error[2];
-	t_point2d	cur;
+	int dx = abs(b.x - a.x);
+	int dy = -abs(b.y - a.y);
+	int sx = (a.x < b.x) ? 1 : -1;
+	int sy = (a.y < b.y) ? 1 : -1;
+	int err = dx + dy; // error value e_xy
 
-	cur.x = a.x;
-	cur.y = a.y;
-	error[0] = abs(b.x - a.x) - abs(b.y - a.y);
-	while (cur.x != b.x || cur.y != b.y)
+	t_point2d cur = a;
+
+	while (true)
 	{
 		if ((uint32_t)cur.x < image->width && (uint32_t)cur.y < image->height)
 			mlx_put_pixel(image, cur.x, cur.y, get_color(cur, a, b));
-		error[1] = 2 * error[0];
-		if (error[1] > -abs(b.y - a.y))
+		
+		if (cur.x == b.x && cur.y == b.y)
+			break;
+		
+		int e2 = 2 * err;
+		if (e2 >= dy)
 		{
-			error[0] -= abs(b.y - a.y);
-			cur.x += (a.x < b.x);
-			cur.x -= (b.x < a.x);
+			err += dy;
+			cur.x += sx;
 		}
-		if (error[1] > -abs(b.x - a.x))
+		if (e2 <= dx)
 		{
-			error[0] -= abs(b.x - a.x);
-			cur.y += (a.y < b.y);
-			cur.y -= (b.y < a.y);
+			err += dx;
+			cur.y += sy;
 		}
 	}
 }
@@ -62,91 +67,6 @@ void	project_point(t_map *map, int y, int x)
 		new->rgba = previous->mapcolor;
 }
 
-// void	draw_line(t_fdf *fdf, int x, int y)
-// {
-// 	if (y == 0 && x == 0)
-// 		project_point(fdf->map, y, x);
-// 	if (y + 1 < fdf->map->rows)
-// 	{
-// 		project_point(fdf->map, y + 1, x);
-// 		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
-// 	}
-// 	if (x + 1 < fdf->map->cols)
-// 	{
-// 		if (y == 0)
-// 			project_point(fdf->map, y, x + 1);
-// 		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
-// 	}
-// }
-
-void project_all_points(t_map *map)
-{
-	for (int i = 0; i < map->rows; i++)
-	{
-		for (int j = 0; j < map->cols; j++)
-		{
-			project_point(map, i, j);
-		}
-	}
-}
-
-void draw_image(void *param)
-{
-	t_fdf *fdf = (t_fdf *)param;
-
-	reset_draw(fdf->image);
-	project_all_points(fdf->map); // ✅ Project all points before drawing
-
-	for (int i = 0; i < fdf->map->rows; i++)
-	{
-		for (int j = 0; j < fdf->map->cols; j++)
-		{
-			if (j < fdf->map->cols - 1)
-				bresenham_algo(fdf->image, fdf->map->grid2d[i][j], fdf->map->grid2d[i][j + 1]);
-			if (i < fdf->map->rows - 1)
-				bresenham_algo(fdf->image, fdf->map->grid2d[i][j], fdf->map->grid2d[i + 1][j]);
-		}
-	}
-}
-
-// void	draw_image(void *param)
-// {
-// 	int		i;
-// 	int		j;
-// 	t_fdf	*fdf;
-//
-// 	fdf = (t_fdf *)param;
-// 	reset_draw(fdf->image);
-// 	i = 0;
-// 	while (i < fdf->map->rows)
-// 	{
-// 		j = 0;
-// 		while (j < fdf->map->cols)
-// 		{
-// 			draw_line(fdf, j, i);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
-
-// void	draw_image(void *param)
-// {
-// 	t_fdf	*fdf = (t_fdf *)param;
-//
-// 	reset_draw(fdf->image);
-// 	for (int i = 0; i < fdf->map->rows; i++)
-// 	{
-// 		for (int j = 0; j < fdf->map->cols; j++)
-// 		{
-// 			if (j < fdf->map->cols - 1)
-// 				draw_line(fdf, i, j, i, j + 1); // horizontal line
-// 			if (i < fdf->map->rows - 1)
-// 				draw_line(fdf, i, j, i + 1, j); // vertical line
-// 		}
-// 	}
-// }
-
 void	draw_line(t_fdf *fdf, int x, int y)
 {
 	if (y == 0 && x == 0)
@@ -161,6 +81,27 @@ void	draw_line(t_fdf *fdf, int x, int y)
 		if (y == 0)
 			project_point(fdf->map, y, x + 1);
 		bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
+	}
+}
+
+void	draw_image(void *param)
+{
+	int		i;
+	int		j;
+	t_fdf	*fdf;
+
+	fdf = (t_fdf *)param;
+	reset_draw(fdf->image);
+	i = 0;
+	while (i < fdf->map->rows)
+	{
+		j = 0;
+		while (j < fdf->map->cols)
+		{
+			draw_line(fdf, j, i);
+			j++;
+		}
+		i++;
 	}
 }
 

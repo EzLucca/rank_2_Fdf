@@ -124,6 +124,7 @@ int	main(int argc, char **argv)
 	ft_bzero(&fdf, sizeof(fdf));
 	init_fdf(argv[1], &fdf);
 	display_menu(fdf.mlx);
+	ft_printf("teste\n"); // TESTING
 	draw_image(&fdf);
 	if(mlx_image_to_window(fdf.mlx, fdf.image, 0, 0) == -1)
 	{

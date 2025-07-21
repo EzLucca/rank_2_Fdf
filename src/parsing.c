@@ -47,8 +47,6 @@ void	process_points(int fd, t_map *map, char *line, int y)
 		map->grid3d[y][x].mapcolor = fill_color(split[x], map, fd);
 		map->high = ft_max(map->high, map->grid3d[y][x].z);
 		map->low = ft_min(map->low, map->grid3d[y][x].z);
-		// printf("x: %f y: %f z: %f color: %d\n", map->grid3d[y][x].x, map->grid3d[y][x].y, map->grid3d[y][x].z, map->grid3d[y][x].mapcolor); // TESTING:
-		// printf("z: %f color: %d\n", point->z, point->mapcolor);
 		x++;
 	}
 	ft_free_array(split);
@@ -58,7 +56,6 @@ void	parse_map(int fd, t_map *map)
 {
 	char	*line;
 	char	*tmp;
-	// char	**split;
 	int		y;
 
 	y = 0;
@@ -69,18 +66,7 @@ void	parse_map(int fd, t_map *map)
 			ft_error_map("Gnl error.", fd, map);
 		line = ft_strtrim(tmp,"\n");
 		free(tmp);
-		// ft_printf("line: %s\n", line); // TESTING: OK
 		process_points(fd, map, line, y);
-		// for (int i = 0; i < map->rows; i++)
-		// {
-		// 	for (int j = 0; j < map->cols; j++)
-		// 	{
-		// 		ft_printf("map->x: %d, map->y: %d, map->z: %d\n",
-		// 				map->grid3d[i][j].x,
-		// 				map->grid3d[i][j].y,
-		// 				map->grid3d[i][j].z);
-		// 	}
-		// }
 		y++;
 	}
 }
