@@ -12,24 +12,10 @@
 
 #include "../include/fdf.h"
 
-// Exit the program as failure.
-void ft_error(char *str)
+void	ft_error(char *str)
 {
 	ft_printf("Error: %s\n", str);
 	exit(EXIT_FAILURE);
-}
-
-void	ft_free_tab(void **tab, size_t len)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < len && tab[i] != NULL)
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
 }
 
 void	free_map(t_map *map)
@@ -43,14 +29,14 @@ void	free_map(t_map *map)
 	free(map);
 }
 
-void ft_error_close(char *str, int fd)
+void	ft_error_close(char *str, int fd)
 {
 	ft_printf("Error: %s\n", str);
 	close(fd);
 	exit(EXIT_FAILURE);
 }
 
-void ft_error_map(char *str, int fd, t_map *map)
+void	ft_error_map(char *str, int fd, t_map *map)
 {
 	ft_printf("Error: %s\n", str);
 	close(fd);

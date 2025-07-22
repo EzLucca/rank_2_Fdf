@@ -27,6 +27,22 @@ be used is minilibx.
 5. visualization
 ### The Bonus
 
+### Tools
+
+This command will show a rule for each error found
+```
+valgrind --leak-check=full --gen-suppressions=all --log-file=filename.txt ./your_program
+```
+```
+grep -v '^==' valgrind_output.txt > cleaned_output.supp
+```
+```
+awk ' BEGIN { RS="}\n"; ORS="" } !seen[$0]++ { print $0 "}\n" } ' suppressions.supp > cleaned.supp
+```
+The next time run the command and errors will be suppressed
+```
+valgrind --leak-check=full --suppressions=<file>.supp ./your_program
+```
 ### Fonts
 `https://pedromelodev.com/index.php/2024/01/14/fdf-chronicles-navigating-the-pro-world-of-2d-projections/`
 `https://medium.com/@ouaallaabdelali1/fdf-725b6255d053`

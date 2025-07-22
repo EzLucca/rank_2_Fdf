@@ -17,7 +17,7 @@ void	ft_free_array(char **array)
 	int	i;
 
 	if (!array)
-		return;
+		return ;
 	i = 0;
 	while (array[i])
 	{
@@ -26,4 +26,17 @@ void	ft_free_array(char **array)
 		i++;
 	}
 	free (array);
+}
+
+void	ft_free_tab(void **tab, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len && tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }

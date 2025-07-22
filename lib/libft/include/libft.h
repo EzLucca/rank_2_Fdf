@@ -86,6 +86,7 @@ int		count_tokens(const char *s, char c);
 int		ft_min(int a, int b);
 int		ft_max(int a, int b);
 void	ft_free_array(char **array);
+void	ft_free_tab(void **tab, size_t len);
 int		ft_atoi_base(const char *nptr, const char *base);
 
 #endif

@@ -14,7 +14,7 @@
 
 int	radiant(int begin, int end, double percent)
 {
-	return((int)((1 - percent) * begin + percent * end));
+	return ((int)((1 - percent) * begin + percent * end));
 }
 
 double	colormix(int begin, int end, int current)
@@ -36,7 +36,7 @@ int	get_color(t_point2d current, t_point2d a, t_point2d b)
 	int		blue;
 	double	percent;
 
-	if(a.rgba == b.rgba)
+	if (a.rgba == b.rgba)
 		return (a.rgba);
 	if (abs(b.x - a.x) > abs(b.y - a.y))
 		percent = colormix(a.x, b.x, current.x);
@@ -69,7 +69,7 @@ int	colors(double percent)
 	else if (percent < 0.9)
 		return (COLOR_NINE);
 	else
-		return (COLOR_TEN); 
+		return (COLOR_TEN);
 }
 
 void	set_zcolor(t_map *map)

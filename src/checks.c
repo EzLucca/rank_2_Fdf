@@ -14,7 +14,7 @@
 
 bool	color_check(const char *color)
 {
-	int i;
+	int	i;
 
 	if (!color)
 		return (false);
@@ -25,9 +25,9 @@ bool	color_check(const char *color)
 		return (false);
 	while (color[i])
 	{
-		if (!((color[i] >= '0' && color[i] <= '9') ||
-					(color[i] >= 'a' && color[i] <= 'f') ||
-					(color[i] >= 'A' && color[i] <= 'F')))
+		if (!((color[i] >= '0' && color[i] <= '9')
+				|| (color[i] >= 'a' && color[i] <= 'f')
+				|| (color[i] >= 'A' && color[i] <= 'F')))
 		{
 			return (false);
 		}
@@ -38,8 +38,9 @@ bool	color_check(const char *color)
 
 bool	number_check(const char *str)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!str || str[0] == '\0')
 		return (false);
 	if (str[0] == '+' || str[0] == '-')
@@ -57,17 +58,17 @@ bool	number_check(const char *str)
 
 bool	valid_point(char *token)
 {
-	char **point;
+	char	**point;
 
 	if (ft_strchr(token, ','))
 	{
 		point = ft_split(token, ',');
-		if(!point || !number_check(point[0]) || !color_check(point[1]))
+		if (!point || !number_check(point[0]) || !color_check(point[1]))
 			return (ft_free_array(point), false);
 	}
 	else if (!number_check(token))
 		return (false);
-	return(true);
+	return (true);
 }
 
 bool	points_check(char *line)

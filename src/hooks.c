@@ -30,13 +30,13 @@ void	ft_hook(void *param)
 
 	fdf = (t_fdf *)param;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_0))
-		reset_map(fdf->map);
+		reset_map(fdf);
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(fdf->mlx);
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_LEFT))
 		fdf->map->x_offset -= 5;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_RIGHT))
-		fdf->map->x_offset += 5; 
+		fdf->map->x_offset += 5;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_DOWN))
 		fdf->map->y_offset += 5;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_UP))
@@ -59,67 +59,49 @@ void	ft_hook_rotate(void *param)
 	else if (mlx_is_key_down(fdf->mlx, MLX_KEY_PERIOD))
 		sign = 1;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_Q))
-		fdf->map->alpha += sign * 0.02; 
+		fdf->map->alpha += sign * 0.02;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_W))
 		fdf->map->beta += sign * 0.02;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_S))
 		fdf->map->zscale += sign * 0.02;
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_X))
-		fdf->map->xrotate += sign * 0.02;
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_Y))
-		fdf->map->yrotate += sign * 0.02;
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_Z))
-		fdf->map->zrotate += sign * 0.02;
 }
 
 void	ft_hook_project(void *param)
 {
 	t_fdf	*fdf;
+	double	sign;
 
+	sign = 0;
 	fdf = (t_fdf *)param;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_C))
 		fdf->map->use_zcolor = !(fdf->map->use_zcolor);
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_1))
-	{
-		fdf->map->alpha = 0.523599;
-		fdf->map->beta = fdf->map->alpha;
-	}
+		fdf->x_rotation_enabled = true;
+	else
+		fdf->x_rotation_enabled = false;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_2))
-	{
-		fdf->map->alpha = 0.6370452;
-		fdf->map->beta = fdf->map->alpha;
-	}
+		fdf->y_rotation_enabled = true;
+	else
+		fdf->y_rotation_enabled = false;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_3))
-	{
-		fdf->map->alpha = 0.46373398 / 2;
-		fdf->map->beta = 0.46373398;
-	}
+		fdf->z_rotation_enabled = true;
+	else
+		fdf->z_rotation_enabled = false;
 }
 
-void loop_handler(void *param)
+void	resize_hook(int width, int height, void *param)
 {
-	t_fdf *fdf = (t_fdf *)param;
+	t_fdf	*fdf;
+	float	map_width;
+	float	map_height;
 
-	ft_hook(fdf);
-	ft_hook_rotate(fdf);
-	ft_hook_project(fdf);
-	// resize_hook(WIDTH, HEIGHT, fdf);
-	draw_image(fdf); // Or only when needed
+	fdf = (t_fdf *) param;
+	if (fdf->image)
+		mlx_delete_image(fdf->mlx, fdf->image);
+	fdf->image = mlx_new_image(fdf->mlx, width, height);
+	mlx_image_to_window(fdf->mlx, fdf->image, 0, 0);
+	map_width = fdf->map->cols * fdf->map->zoom;
+	map_height = fdf->map->rows * fdf->map->zoom;
+	fdf->map->x_offset = (width / 2) - (map_width / 2);
+	fdf->map->y_offset = (height / 2) - (map_height / 2);
 }
-
-// void	resize_hook(int width, int height, void *param)
-// {
-// 	t_fdf	*fdf;
-// 	float	map_width;
-// 	float	map_height;
-//
-// 	fdf = (t_fdf *) param;
-// 	if(fdf->image)
-// 		mlx_delete_image(fdf->mlx, fdf->image);
-// 	fdf->image = mlx_new_image(fdf->mlx, width, height);
-// 	mlx_image_to_window(fdf->mlx, fdf->image, 0, 0);
-// 	map_width = fdf->map->cols * fdf->map->zoom;
-// 	map_height = fdf->map->rows * fdf->map->zoom;
-// 	fdf->map->x_offset = (width / 2) - (map_width / 2);
-// 	fdf->map->y_offset = (height / 2) - (map_height / 2);
-// }

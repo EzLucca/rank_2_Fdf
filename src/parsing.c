@@ -20,7 +20,7 @@ int	fill_color(char *data, t_map *map, int fd)
 	comma = ft_strchr(data, ',');
 	if (!comma)
 		return (0xFFFFFFFF);
-	comma++; 
+	comma++;
 	if (ft_strncmp(comma, "0x", 2) && ft_strncmp(comma, "0X", 2))
 		ft_error_map("Invalid_map (missing 0x color prefix)", fd, map);
 	comma += 2;
@@ -32,6 +32,8 @@ int	fill_color(char *data, t_map *map, int fd)
 void	process_points(int fd, t_map *map, char *line, int y)
 {
 	int			x;
+	int			x_offset;
+	int			y_offset;
 	char		**split;
 
 	x = 0;
@@ -39,11 +41,13 @@ void	process_points(int fd, t_map *map, char *line, int y)
 	free(line);
 	if (!split)
 		ft_error_map("split error.", fd, map);
+	x_offset = (map->cols - 1) * map->interval / 2;
+	y_offset = (map->rows - 1) * map->interval / 2;
 	while (x < map->cols)
 	{
-		map->grid3d[y][x].x = (double)x;
-		map->grid3d[y][x].y = (double)y;
-		map->grid3d[y][x].z = (double)ft_atoi(split[x]);
+		map->grid3d[y][x].x = (double)x * (map->interval) - x_offset;
+		map->grid3d[y][x].y = (double)y * (map->interval) - y_offset;
+		map->grid3d[y][x].z = (double)ft_atoi(split[x]) * (map->interval);
 		map->grid3d[y][x].mapcolor = fill_color(split[x], map, fd);
 		map->high = ft_max(map->high, map->grid3d[y][x].z);
 		map->low = ft_min(map->low, map->grid3d[y][x].z);
@@ -64,7 +68,7 @@ void	parse_map(int fd, t_map *map)
 		tmp = get_next_line(fd);
 		if (!tmp)
 			ft_error_map("Gnl error.", fd, map);
-		line = ft_strtrim(tmp,"\n");
+		line = ft_strtrim(tmp, "\n");
 		free(tmp);
 		process_points(fd, map, line, y);
 		y++;

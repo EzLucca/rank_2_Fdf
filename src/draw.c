@@ -12,9 +12,9 @@
 
 #include "../include/fdf.h"
 
-void	bresenham_init(t_point2d a, t_point2d b)
+t_draw	bresenham_init(t_point2d a, t_point2d b)
 {
-	t_bresenham jack;
+	t_draw	jack;
 
 	jack.dx = abs(b.x - a.x);
 	jack.dy = -abs(b.y - a.y);
@@ -30,76 +30,36 @@ void	bresenham_init(t_point2d a, t_point2d b)
 	jack.cur = a;
 	jack.b = b;
 	jack.a = a;
+	return (jack);
 }
 
-void bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
+void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
 {
-    int			e2;
-	t_bresenham jack;
+	int		e2;
+	t_draw	jack;
 
-	ft_bzero(&jack, sizeof(t_bresenham));
-	bresenham_init(a, b);
-    while (1) // Use 1 for true, as true might be a macro
-    {
-        // Boundary check before drawing
-        if ((uint32_t)jack.cur.x < image->width && \
-            (uint32_t)jack.cur.y < image->height)
-        {
-            mlx_put_pixel(image, jack.cur.x, jack.cur.y, \
-                          get_color(jack.cur, jack.a, jack.b));
-        }
-
-        if (jack.cur.x == jack.b.x && jack.cur.y == jack.b.y)
-            break;
-
-        e2 = 2 * jack.err;
-
-        if (e2 >= jack.dy)
-        {
-            jack.err += jack.dy;
-            jack.cur.x += jack.sx;
-        }
-
-        if (e2 <= jack.dx)
-        {
-            jack.err += jack.dx;
-            jack.cur.y += jack.sy;
-        }
-    }
-} // Total lines: ~2
-
-// void bresenham_algo(mlx_image_t *image, t_point2d a, t_point2d b)
-// {
-// 	int dx;
-// 	int dy;
-// 	int sx;
-// 	int sy;
-// 	int err; // error value e_xy
-// 	t_point2d cur;
-//
-// 	sx = (a.x < b.x) ? 1 : -1;
-// 	sy = (a.y < b.y) ? 1 : -1;
-// 	err = dx + dy; // error value e_xy
-// 	cur = a;
-// 	while (true)
-// 	{
-// 		if ((uint32_t)cur.x < image->width && (uint32_t)cur.y < image->height)
-// 			mlx_put_pixel(image, cur.x, cur.y, get_color(cur, a, b));
-// 		if (cur.x == b.x && cur.y == b.y)
-// 			break;
-// 		int e2 = 2 * err;
-// 		if (e2 >= dy)
-// 		{
-// 			err += dy;
-// 			cur.x += sx;
-// 		}
-// 		if (e2 <= dx)
-// 		{
-// 			err += dx;
-// 			cur.y += sy;
-// 		}
-// 	}
-// }
+	jack = bresenham_init(a, b);
+	while (1)
+	{
+		if ((uint32_t)jack.cur.x < image->width
+			&& (uint32_t)jack.cur.y < image->height)
+			mlx_put_pixel(image, jack.cur.x, jack.cur.y,
+				get_color(jack.cur, jack.a, jack.b));
+		if (jack.cur.x == jack.b.x && jack.cur.y == jack.b.y)
+			break ;
+		e2 = 2 * jack.err;
+		if (e2 >= jack.dy)
+		{
+			jack.err += jack.dy;
+			jack.cur.x += jack.sx;
+		}
+		if (e2 <= jack.dx)
+		{
+			jack.err += jack.dx;
+			jack.cur.y += jack.sy;
+		}
+	}
+}
 
 void	project_point(t_map *map, int y, int x)
 {
@@ -115,8 +75,10 @@ void	project_point(t_map *map, int y, int x)
 	rotate_z(&tmp.x, &tmp.y, map->zrotate);
 	rotate_x(&tmp.y, &tmp.z, map->xrotate);
 	rotate_y(&tmp.x, &tmp.z, map->yrotate);
-	new->x = (int)((tmp.x * map->zoom - tmp.y * map->zoom) * cos(map->alpha) + map->x_offset);
-	new->y = (int)(-tmp.z * map->zoom + (tmp.x * map->zoom + tmp.y * map->zoom) * sin(map->beta) + map->y_offset);
+	new->x = (int)((tmp.x * map->zoom - tmp.y * map->zoom)
+			* cos(map->alpha) + map->x_offset);
+	new->y = (int)(-tmp.z * map->zoom + (tmp.x * map->zoom + tmp.y * map->zoom)
+			* sin(map->beta) + map->y_offset);
 	if (map->use_zcolor)
 		new->rgba = previous->zcolor;
 	else
@@ -130,15 +92,15 @@ void	draw_line(t_fdf *fdf, int x, int y)
 	if (y + 1 < fdf->map->rows)
 	{
 		project_point(fdf->map, y + 1, x);
-		bresenham_draw(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
-		// bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y + 1][x]);
+		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
+			fdf->map->grid2d[y + 1][x]);
 	}
 	if (x + 1 < fdf->map->cols)
 	{
 		if (y == 0)
 			project_point(fdf->map, y, x + 1);
-		bresenham_draw(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
-		// bresenham_algo(fdf->image, fdf->map->grid2d[y][x], fdf->map->grid2d[y][x + 1]);
+		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
+			fdf->map->grid2d[y][x + 1]);
 	}
 }
 

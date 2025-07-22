@@ -58,34 +58,29 @@ static void	*free_array(char **array)
 }
 
 //Split the string in substring
-char **ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
-	char	**array;
+	char	**arr;
 	int		i;
 	int		len;
-	int		tokens;
 
-	if (!s)
-		return (NULL);
-	tokens = count_tokens(s, c);
-	array = ft_calloc(tokens + 1, sizeof(char *));
-	if (!array)
-		return (NULL);
 	i = 0;
+	arr = ft_calloc(count_tokens(s, c) + 1, sizeof(char *));
+	if (!s || !(arr))
+		return (NULL);
 	while (*s)
 	{
 		if (*s != c)
 		{
 			len = substr_len(s, c);
-			array[i] = ft_substr(s, 0, len);
-			if (!array[i])
-				return (free_array(array));
-			i++;
+			arr[i] = ft_substr(s, 0, len);
+			if (!arr[i])
+				return (free_array(arr));
 			s += len;
+			i++;
 		}
 		else
 			s++;
 	}
-	array[i] = NULL;
-	return (array);
+	return (arr[i] = NULL, arr);
 }

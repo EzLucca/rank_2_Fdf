@@ -12,19 +12,48 @@
 
 #include "../include/fdf.h"
 
-
-void	reset_map(t_map *map)
+void	reset_map(t_fdf *fdf)
 {
-	map->alpha = 0.46373398 / 2;
-	map->beta = 0.46373398;
-	map->xrotate = 0;
-	map->yrotate = 0;
-	map->zrotate = 0;
-	map->x_offset = WIDTH / 2;
-	map->y_offset = HEIGHT / 2;
-	map->zoom = 1;
-	map->zscale = 1;
-	map->use_zcolor = false;
+	int	width;
+	int	height;
+	int	map_width;
+	int	map_height;
+
+	width = fdf->mlx->width;
+	height = fdf->mlx->height;
+	map_width = fdf->map->cols * fdf->map->zoom;
+	map_height = fdf->map->rows * fdf->map->zoom;
+	fdf->map->alpha = 0.46373398 / 2;
+	fdf->map->beta = 0.46373398;
+	fdf->map->xrotate = 0;
+	fdf->map->yrotate = 0;
+	fdf->map->zrotate = 0;
+	fdf->map->x_offset = (width / 2) - (map_width / 2);
+	fdf->map->y_offset = (height / 2) - (map_height / 2);
+	fdf->map->zoom = 1;
+	fdf->map->zscale = 1;
+	fdf->map->use_zcolor = false;
+}
+
+void	display_menu(mlx_t *mlx)
+{
+	int		x;
+	int		y;
+
+	x = 20;
+	y = 20;
+	mlx_put_string(mlx, "CONTROLS", x, y);
+	mlx_put_string(mlx, "Colors\t\t\t\t\t\t\t\tc", x, y += 35);
+	mlx_put_string(mlx, "Zoom\t\t\t\t\t\t\t\t\t\tscroll or -+", x, y += 20);
+	mlx_put_string(mlx, "Translate\t\t\t\t\tarrow keys", x, y += 20);
+	mlx_put_string(mlx, "Scale z\t\t\t\t\t\t\ts + </>", x, y += 20);
+	mlx_put_string(mlx, "PROJECTION", x, y += 30);
+	mlx_put_string(mlx, "Angle x\t\t\t\t\t\t\t\tq + </>", x, y += 25);
+	mlx_put_string(mlx, "Angle y\t\t\t\t\t\t\t\tw + </>", x, y += 20);
+	mlx_put_string(mlx, "Rotate X\t\t\t\t\t\t\t1", x, y += 20);
+	mlx_put_string(mlx, "Rotate Y\t\t\t\t\t\t\t2", x, y += 20);
+	mlx_put_string(mlx, "Rotate Z\t\t\t\t\t\t\t3", x, y += 20);
+	mlx_put_string(mlx, "RESET\t\t\t\t\t\t\t\t\t\t0", x, y += 30);
 }
 
 void	reset_draw(mlx_image_t *image)
@@ -45,20 +74,19 @@ void	reset_draw(mlx_image_t *image)
 	}
 }
 
-// void	loop_mlx(t_fdf *fdf)
-// {
-// 	if(mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
-// 	{
-// 		free_map(fdf->map);
-// 		mlx_close_window(fdf->mlx);
-// 		// ft_error(mlx_strerror(mlx_errno));
-// 		ft_error("error image");
-// 	}
-// 	mlx_loop_hook(fdf->mlx, &ft_hook, fdf);
-// 	mlx_loop_hook(fdf->mlx, &ft_hook_rotate, fdf);
-// 	mlx_loop_hook(fdf->mlx, &ft_hook_project, fdf);
-// 	mlx_scroll_hook(fdf->mlx, &ft_scroll_hook, fdf);
-// 	mlx_loop(fdf->mlx);
-// 	mlx_delete_image(fdf->mlx, fdf->image);
-// 	mlx_terminate(fdf->mlx);
-// }
+void	loop_handler(void *param)
+{
+	t_fdf	*fdf;
+
+	fdf = (t_fdf *)param;
+	ft_hook(fdf);
+	ft_hook_rotate(fdf);
+	ft_hook_project(fdf);
+	if (fdf->x_rotation_enabled)
+		fdf->map->xrotate += 0.03f;
+	if (fdf->y_rotation_enabled)
+		fdf->map->yrotate += 0.03f;
+	if (fdf->z_rotation_enabled)
+		fdf->map->zrotate += 0.03f;
+	draw_image(fdf);
+}
