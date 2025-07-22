@@ -69,9 +69,7 @@ void	ft_hook_rotate(void *param)
 void	ft_hook_project(void *param)
 {
 	t_fdf	*fdf;
-	double	sign;
 
-	sign = 0;
 	fdf = (t_fdf *)param;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_C))
 		fdf->map->use_zcolor = !(fdf->map->use_zcolor);
