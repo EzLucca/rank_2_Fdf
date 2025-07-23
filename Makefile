@@ -34,10 +34,16 @@ $(LIBFT_A):
 
 $(MLX_A):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
+		echo "Cloning MLX42 repository..."; \
 		git clone $(MLX_REPO) $(MLX_DIR); \
-		fi;
-	@cmake -S $(MLX_DIR) -B $(BUILD_DIR)/mlx42
-	@make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4
+	fi;
+	@if [ ! -f "$(MLX_A)" ] || find "$(MLX_DIR)" -newer "$(MLX_A)" -print -quit | grep -q .; then \
+		echo "Building MLX42 library..."; \
+		cmake -S $(MLX_DIR) -B $(BUILD_DIR)/mlx42; \
+		make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4; \
+	else \
+		echo "MLX42 library is up to date."; \
+	fi
 
 $(NAME): $(LIBFT_A) $(MLX_A) $(OBJ)
 	@$(CC) $(OBJ) $(LIBFT_A) $(MLX_A) $(LDFLAGS) -o $@
@@ -60,4 +66,5 @@ fclean: clean
 
 re: fclean all
 
+.SECONDARY: $(OBJS)
 .PHONY: all clean fclean re
