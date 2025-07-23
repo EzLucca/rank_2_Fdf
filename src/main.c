@@ -6,13 +6,13 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 14:46:45 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 16:05:36 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 18:52:40 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-void	grid_check(int fd, t_map *map)
+static void	grid_check(int fd, t_map *map)
 {
 	char	*line;
 	char	*tmp;
@@ -40,7 +40,7 @@ void	grid_check(int fd, t_map *map)
 	}
 }
 
-void	init_map(t_map *map)
+static void	init_map(t_map *map)
 {
 	map->alpha = 0.46373398 / 2;
 	map->beta = 0.46373398;
@@ -58,9 +58,10 @@ void	init_map(t_map *map)
 	map->cols = 0;
 	map->grid2d = NULL;
 	map->grid3d = NULL;
+	map->orthogonal = false;
 }
 
-t_map	*open_validate_map(char *filename)
+static t_map	*open_validate_map(char *filename)
 {
 	int		fd;
 	t_map	*map;
@@ -86,7 +87,7 @@ t_map	*open_validate_map(char *filename)
 	return (map);
 }
 
-void	init_fdf(char *filename, t_fdf	*fdf)
+static void	init_fdf(char *filename, t_fdf	*fdf)
 {
 	fdf->map = open_validate_map(filename);
 	fdf->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
@@ -113,7 +114,6 @@ int	main(int argc, char **argv)
 	ft_bzero (&fdf, sizeof(fdf));
 	init_fdf (argv[1], &fdf);
 	display_menu (fdf.mlx);
-	draw_image (&fdf);
 	if (mlx_image_to_window (fdf.mlx, fdf.image, 0, 0) == -1)
 	{
 		free_map(fdf.map);

@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/09 10:55:13 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 14:32:30 by edlucca          ###   ########.fr       */
+/*   Created: 2025/07/23 10:50:47 by edlucca           #+#    #+#             */
+/*   Updated: 2025/07/23 10:50:50 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-bool	color_check(const char *color)
+static bool	color_check(const char *color)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ bool	color_check(const char *color)
 	return (true);
 }
 
-bool	number_check(const char *str)
+static bool	number_check(const char *str)
 {
 	int	i;
 
@@ -56,7 +56,7 @@ bool	number_check(const char *str)
 	return (true);
 }
 
-bool	valid_point(char *token)
+static bool	valid_point(char *token)
 {
 	char	**point;
 

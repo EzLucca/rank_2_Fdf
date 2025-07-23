@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 17:11:16 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 14:49:13 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 19:10:55 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ void	ft_hook_rotate(void *param)
 		fdf->map->beta += sign * 0.02;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_S))
 		fdf->map->zscale += sign * 0.02;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_1))
+		fdf->map->xrotate += sign * 0.02f;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_2))
+		fdf->map->yrotate += sign * 0.02f;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_3))
+		fdf->map->zrotate += sign * 0.02f;
 }
 
 void	ft_hook_project(void *param)
@@ -73,18 +79,10 @@ void	ft_hook_project(void *param)
 	fdf = (t_fdf *)param;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_C))
 		fdf->map->use_zcolor = !(fdf->map->use_zcolor);
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_1))
-		fdf->x_rotation_enabled = true;
-	else
-		fdf->x_rotation_enabled = false;
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_2))
-		fdf->y_rotation_enabled = true;
-	else
-		fdf->y_rotation_enabled = false;
-	if (mlx_is_key_down(fdf->mlx, MLX_KEY_3))
-		fdf->z_rotation_enabled = true;
-	else
-		fdf->z_rotation_enabled = false;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_O))
+		fdf->map->orthogonal = true;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_I))
+		fdf->map->orthogonal = false;
 }
 
 void	resize_hook(int width, int height, void *param)

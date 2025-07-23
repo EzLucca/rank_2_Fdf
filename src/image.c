@@ -6,18 +6,18 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 17:11:41 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 14:29:00 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 11:39:50 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int	radiant(int begin, int end, double percent)
+static int	radiant(int begin, int end, double percent)
 {
 	return ((int)((1 - percent) * begin + percent * end));
 }
 
-double	colormix(int begin, int end, int current)
+static double	colormix(int begin, int end, int current)
 {
 	double	place;
 	double	dist;
@@ -38,7 +38,7 @@ int	get_color(t_point2d current, t_point2d a, t_point2d b)
 
 	if (a.rgba == b.rgba)
 		return (a.rgba);
-	if (abs(b.x - a.x) > abs(b.y - a.y))
+	if (fabs(b.x - a.x) > fabs(b.y - a.y))
 		percent = colormix(a.x, b.x, current.x);
 	else
 		percent = colormix(a.y, b.y, current.y);
@@ -48,7 +48,7 @@ int	get_color(t_point2d current, t_point2d a, t_point2d b)
 	return ((red << 24) | (green << 16) | blue << 8 | 0xFF);
 }
 
-int	colors(double percent)
+static int	colors(double percent)
 {
 	if (percent < 0.1)
 		return (COLOR_ONE);

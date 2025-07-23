@@ -1,5 +1,5 @@
 CC       := cc
-CFLAGS   := -O0 -g -Wall -Wextra -Werror 
+CFLAGS   := -Wall -Wextra -Werror -O3
 LDFLAGS  := -ldl -lglfw -lm
 
 NAME     := fdf
@@ -15,7 +15,16 @@ MLX_REPO	:= https://github.com/codam-coding-college/MLX42.git
 MLX_DIR     := lib/MLX42
 MLX_A       := $(BUILD_DIR)/mlx42/libmlx42.a
 
-SRC      := $(wildcard $(SRC_DIR)/*.c)
+SRC      := $(SRC_DIR)/checks.c \
+			$(SRC_DIR)/draw.c \
+			$(SRC_DIR)/hooks.c \
+			$(SRC_DIR)/image.c \
+			$(SRC_DIR)/loop.c \
+			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/parsing.c \
+			$(SRC_DIR)/rotations.c \
+			$(SRC_DIR)/utils.c \
+
 OBJ      := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 all: $(LIBFT_A) $(MLX_A) $(NAME)
@@ -30,7 +39,7 @@ $(MLX_A):
 	@cmake -S $(MLX_DIR) -B $(BUILD_DIR)/mlx42
 	@make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4
 
-$(NAME): $(OBJ) $(LIBFT_A) $(MLX_A)
+$(NAME): $(LIBFT_A) $(MLX_A) $(OBJ)
 	@$(CC) $(OBJ) $(LIBFT_A) $(MLX_A) $(LDFLAGS) -o $@
 	@clear
 	@echo "✅ Build $(NAME) successfully! 🎉"

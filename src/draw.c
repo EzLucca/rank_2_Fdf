@@ -6,18 +6,18 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 17:11:00 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/21 22:33:33 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 19:30:24 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-t_draw	bresenham_init(t_point2d a, t_point2d b)
+static t_draw	bresenham_init(t_point2d a, t_point2d b)
 {
 	t_draw	jack;
 
-	jack.dx = abs(b.x - a.x);
-	jack.dy = -abs(b.y - a.y);
+	jack.dx = fabs(b.x - a.x);
+	jack.dy = -fabs(b.y - a.y);
 	if (a.x < b.x)
 		jack.sx = 1;
 	else
@@ -33,7 +33,7 @@ t_draw	bresenham_init(t_point2d a, t_point2d b)
 	return (jack);
 }
 
-void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
+static void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
 {
 	int		e2;
 	t_draw	jack;
@@ -42,9 +42,9 @@ void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
 	while (1)
 	{
 		if ((uint32_t)jack.cur.x < image->width
-			&& (uint32_t)jack.cur.y < image->height)
+				&& (uint32_t)jack.cur.y < image->height)
 			mlx_put_pixel(image, jack.cur.x, jack.cur.y,
-				get_color(jack.cur, jack.a, jack.b));
+					get_color(jack.cur, jack.a, jack.b));
 		if (jack.cur.x == jack.b.x && jack.cur.y == jack.b.y)
 			break ;
 		e2 = 2 * jack.err;
@@ -61,7 +61,7 @@ void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
 	}
 }
 
-void	project_point(t_map *map, int y, int x)
+static void	project_point(t_map *map, int y, int x)
 {
 	t_point3d	*previous;
 	t_point3d	tmp;
@@ -79,13 +79,18 @@ void	project_point(t_map *map, int y, int x)
 			* cos(map->alpha) + map->x_offset);
 	new->y = (int)(-tmp.z * map->zoom + (tmp.x * map->zoom + tmp.y * map->zoom)
 			* sin(map->beta) + map->y_offset);
+	if (map->orthogonal == true)
+	{
+		new->x = (int)(tmp.x * map->zoom + map->x_offset);
+		new->y = (int)(tmp.y * map->zoom + map->y_offset);
+	}
 	if (map->use_zcolor)
 		new->rgba = previous->zcolor;
 	else
 		new->rgba = previous->mapcolor;
 }
 
-void	draw_line(t_fdf *fdf, int x, int y)
+static void	draw_line(t_fdf *fdf, int x, int y)
 {
 	if (y == 0 && x == 0)
 		project_point(fdf->map, y, x);
@@ -93,14 +98,14 @@ void	draw_line(t_fdf *fdf, int x, int y)
 	{
 		project_point(fdf->map, y + 1, x);
 		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
-			fdf->map->grid2d[y + 1][x]);
+				fdf->map->grid2d[y + 1][x]);
 	}
 	if (x + 1 < fdf->map->cols)
 	{
 		if (y == 0)
 			project_point(fdf->map, y, x + 1);
 		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
-			fdf->map->grid2d[y][x + 1]);
+				fdf->map->grid2d[y][x + 1]);
 	}
 }
 

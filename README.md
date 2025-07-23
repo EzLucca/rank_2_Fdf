@@ -27,6 +27,12 @@ be used is minilibx.
 5. visualization
 ### The Bonus
 
+- [ ] gnl leaks 
+- [ ] Color 0xffffff works and 0xff also works Should it?
+- [ ] Protect z value for not bigger numbers
+- [ ] color button inconsistent
+- [ ] empty file map
+
 ### Tools
 
 This command will show a rule for each error found

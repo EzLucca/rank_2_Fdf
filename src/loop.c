@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:04:29 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 16:05:30 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 19:11:52 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,15 @@ void	display_menu(mlx_t *mlx)
 	mlx_put_string(mlx, "Zoom\t\t\t\t\t\t\t\t\t\tscroll or -+", x, y += 20);
 	mlx_put_string(mlx, "Translate\t\t\t\t\tarrow keys", x, y += 20);
 	mlx_put_string(mlx, "Scale z\t\t\t\t\t\t\ts + </>", x, y += 20);
-	mlx_put_string(mlx, "PROJECTION", x, y += 30);
 	mlx_put_string(mlx, "Angle x\t\t\t\t\t\t\t\tq + </>", x, y += 25);
 	mlx_put_string(mlx, "Angle y\t\t\t\t\t\t\t\tw + </>", x, y += 20);
-	mlx_put_string(mlx, "Rotate X\t\t\t\t\t\t\t1", x, y += 20);
-	mlx_put_string(mlx, "Rotate Y\t\t\t\t\t\t\t2", x, y += 20);
-	mlx_put_string(mlx, "Rotate Z\t\t\t\t\t\t\t3", x, y += 20);
+	mlx_put_string(mlx, "ROTATIONS", x, y += 30);
+	mlx_put_string(mlx, "Rotate X\t\t\t\t\t\t\t1 + </>", x, y += 20);
+	mlx_put_string(mlx, "Rotate Y\t\t\t\t\t\t\t2 + </>", x, y += 20);
+	mlx_put_string(mlx, "Rotate Z\t\t\t\t\t\t\t3 + </>", x, y += 20);
+	mlx_put_string(mlx, "PROJECTION", x, y += 30);
+	mlx_put_string(mlx, "Isometric\t\t\t\t\t\t\ti", x, y += 20);
+	mlx_put_string(mlx, "Orthogonal\t\t\t\t\t\to", x, y += 20);
 	mlx_put_string(mlx, "RESET\t\t\t\t\t\t\t\t\t\t0", x, y += 30);
 }
 
@@ -82,11 +85,5 @@ void	loop_handler(void *param)
 	ft_hook(fdf);
 	ft_hook_rotate(fdf);
 	ft_hook_project(fdf);
-	if (fdf->x_rotation_enabled)
-		fdf->map->xrotate += 0.03f;
-	if (fdf->y_rotation_enabled)
-		fdf->map->yrotate += 0.03f;
-	if (fdf->z_rotation_enabled)
-		fdf->map->zrotate += 0.03f;
 	draw_image(fdf);
 }

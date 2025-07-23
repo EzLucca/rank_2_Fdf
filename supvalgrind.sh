@@ -4,10 +4,10 @@
 # Path to your header file (adjust if necessary)
 HEADER_FILE="include/fdf.h"
 # Path to your Valgrind suppression file (adjust if necessary)
-# Assuming 'cleaned.supp' is your Valgrind suppression file based on our previous conversation
-SUPPRESSION_FILE="cleaned.supp"
+# Assuming 'valgrind.supp' is your Valgrind suppression file based on our previous conversation
+SUPPRESSION_FILE="valgrind.supp"
 # Temporary file to store extracted function names
-TEMP_FUNCTION_LIST="/tmp/fdf_function_list_$(date +%s).txt"
+TEMP_FUNCTION_LIST="fdf_function_list_$(date +%s).txt"
 
 # --- Script Logic ---
 

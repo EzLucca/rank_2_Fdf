@@ -6,13 +6,13 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 17:00:31 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/16 15:07:25 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/23 10:51:16 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int	fill_color(char *data, t_map *map, int fd)
+static int	fill_color(char *data, t_map *map, int fd)
 {
 	char	*comma;
 	int		color;
@@ -29,7 +29,7 @@ int	fill_color(char *data, t_map *map, int fd)
 	return (color);
 }
 
-void	process_points(int fd, t_map *map, char *line, int y)
+static void	process_points(int fd, t_map *map, char *line, int y)
 {
 	int			x;
 	int			x_offset;
