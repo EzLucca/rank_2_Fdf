@@ -65,6 +65,7 @@ typedef struct s_draw
 
 typedef struct s_map
 {
+	int			fd;
 	int			rows;		// Number of rows
 	int			cols;		// Number of columns
 	int			high;		// Highest elevation value

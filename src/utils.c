@@ -49,3 +49,11 @@ void	ft_upper(unsigned int i, char *c)
 	i++;
 	*c = ft_toupper(*c);
 }
+
+void	ft_error_all(char *str, int fd, t_map *map, char **split)
+{
+	ft_printf("Error: %s\n", str);
+	close(fd);
+	ft_free_array(split);
+	free_map(map);
+}

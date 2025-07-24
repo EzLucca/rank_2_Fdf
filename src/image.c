@@ -34,6 +34,7 @@ int	get_color(t_point2d current, t_point2d a, t_point2d b)
 	int		red;
 	int		green;
 	int		blue;
+	int		color;
 	double	percent;
 
 	if (a.rgba == b.rgba)
@@ -45,7 +46,8 @@ int	get_color(t_point2d current, t_point2d a, t_point2d b)
 	red = radiant((a.rgba >> 24) & 0xFF, (b.rgba >> 24) & 0xFF, percent);
 	green = radiant((a.rgba >> 16) & 0xFF, (b.rgba >> 16) & 0xFF, percent);
 	blue = radiant((a.rgba >> 8) & 0xFF, (b.rgba >> 8) & 0xFF, percent);
-	return ((red << 24) | (green << 16) | blue << 8 | 0xFF);
+	color = (red << 24) | (green << 16) | blue << 8 | 0xFF;
+	return (color);
 }
 
 static int	colors(double percent)

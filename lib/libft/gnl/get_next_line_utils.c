@@ -12,96 +12,95 @@
 
 #include "../include/get_next_line.h"
 
-size_t	ft_strlen_gnl(char *s)
+char	*ft_strdup_copy(const char *src)
 {
-	size_t	p;
+	size_t	len;
+	size_t	i;
+	char	*dest;
 
-	if (!s)
-		return (0);
-	p = 0;
-	while (s[p])
-		p++;
-	return (p);
-}
-
-char	*ft_strchr_gnl(char *s, int c)
-{
-	int	i;
-
-	if (!s)
+	if (!src)
 		return (NULL);
-	c = (unsigned char) c;
+	len = ft_strlen_gnl(src);
+	dest = malloc(len + 1);
+	if (!dest)
+		return (NULL);
 	i = 0;
-	while (s[i])
+	while (i < len)
 	{
-		if (s[i] == c)
-			return ((char *) &s[i]);
+		dest[i] = src[i];
 		i++;
 	}
-	if (s[i] == c)
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	unsigned char			*tmp_dst;
-	const unsigned char		*tmp_src;
-
-	if (!dest || !src)
-		return (NULL);
-	tmp_dst = (unsigned char *) dest;
-	tmp_src = (const unsigned char *) src;
-	while (n--)
-		*(tmp_dst++) = *(tmp_src++);
+	dest[len] = '\0';
 	return (dest);
 }
 
-char	*ft_strndup_gnl(const char *s, size_t n)
+char	*ft_strchr_gnl(char *s, char c)
 {
-	char	*dst;
-	size_t	i;
+	unsigned int	i;
 
+	i = 0;
 	if (!s)
 		return (NULL);
-	dst = malloc(sizeof(char) * (n + 1));
-	if (!dst)
-		return (NULL);
-	i = 0;
-	while (i < n)
+	while (s[i])
 	{
-		dst[i] = s[i];
+		if (s[i] == c)
+			return (&s[i]);
 		i++;
 	}
-	dst[n] = '\0';
-	return (dst);
+	if (s[i] == c)
+		return (&s[i]);
+	return (NULL);
 }
 
-char	*ft_strjoin_gnl(char *buffer, char *tmp_buf)
+char	*ft_strjoin_gnl(char const *s1, char const *s2)
 {
-	int		s1_len;
-	int		s2_len;
-	char	*string;
+	size_t	i;
+	char	*joined;
 
-	s1_len = ft_strlen_gnl(buffer);
-	s2_len = ft_strlen_gnl(tmp_buf);
-	if (!tmp_buf)
+	if (!s2)
 		return (NULL);
-	if (!buffer)
+	if (!s1 && s2)
+		return (ft_strdup_copy(s2));
+	joined = malloc((ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1));
+	if (!joined)
+		return (NULL);
+	i = 0;
+	while (*s1)
+		joined[i++] = *s1++;
+	while (*s2)
+		joined[i++] = *s2++;
+	joined[i] = '\0';
+	return (joined);
+}
+
+size_t	ft_strlen_gnl(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+char	*ft_substr_gnl(char const *src, unsigned int start, size_t len)
+{
+	char	*res;
+	size_t	i;
+
+	if (!src || start >= ft_strlen_gnl(src))
+		return (ft_strdup_copy(""));
+	if (len > ft_strlen_gnl(src + start))
+		len = ft_strlen_gnl(src + start);
+	res = malloc(len + 1);
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (src[start + i] && i < len)
 	{
-		buffer = malloc(1);
-		if (!buffer)
-			return (NULL);
-		buffer[0] = '\0';
+		res[i] = src[start + i];
+		i++;
 	}
-	s1_len = ft_strlen_gnl(buffer);
-	s2_len = ft_strlen_gnl(tmp_buf);
-	string = malloc((s1_len + s2_len + 1) * sizeof(char));
-	if (!string)
-		return (free(buffer), NULL);
-	ft_memcpy(string, buffer, s1_len);
-	ft_memcpy(string + s1_len, tmp_buf, s2_len);
-	string[s1_len + s2_len] = '\0';
-	free(buffer);
-	return (string);
+	res[i] = '\0';
+	return (res);
 }

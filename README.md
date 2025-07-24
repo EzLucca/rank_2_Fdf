@@ -27,17 +27,17 @@ be used is minilibx.
 5. visualization
 ### The Bonus
 
-- [ ] gnl leaks 
-- [ ] Color 0xffffff works and 0xff also works Should it?
-- [ ] Protect z value for not bigger numbers
+- [x] gnl leaks 
+- [x] Color 0xffffff works and 0xff also works Should it?
+- [x] Protect z value for not bigger numbers
 - [ ] color button inconsistent
-- [ ] empty file map
+- [x] empty file map
 
 ### Tools
 
 This command will show a rule for each error found
 ```
-valgrind --leak-check=full --gen-suppressions=all --log-file=filename.txt ./your_program
+valgrind --leak-check=full --gen-suppressions=all --log-file=filename.txt ./fdf test_maps/pyramide.fdf
 ```
 ```
 grep -v '^==' valgrind_output.txt > cleaned_output.supp
@@ -47,7 +47,7 @@ awk ' BEGIN { RS="}\n"; ORS="" } !seen[$0]++ { print $0 "}\n" } ' suppressions.s
 ```
 The next time run the command and errors will be suppressed
 ```
-valgrind --leak-check=full --suppressions=<file>.supp ./your_program
+valgrind --leak-check=full --suppressions=valgrind.supp ./fdf
 ```
 ### Fonts
 `https://pedromelodev.com/index.php/2024/01/14/fdf-chronicles-navigating-the-pro-world-of-2d-projections/`
@@ -56,3 +56,4 @@ valgrind --leak-check=full --suppressions=<file>.supp ./your_program
 `https://velog.io/@tmdgks2222/fdf`
 `https://github.com/8luerose/FDF.git`
 `https://github.com/ailopez-o/42Barcelona-FdF`
+

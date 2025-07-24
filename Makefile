@@ -1,5 +1,5 @@
 CC       := cc
-CFLAGS   := -Wall -Wextra -Werror -O3
+CFLAGS   := -g -Wall -Wextra -Werror
 LDFLAGS  := -ldl -lglfw -lm
 
 NAME     := fdf
@@ -36,14 +36,9 @@ $(MLX_A):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		echo "Cloning MLX42 repository..."; \
 		git clone $(MLX_REPO) $(MLX_DIR); \
-	fi;
-	@if [ ! -f "$(MLX_A)" ] || find "$(MLX_DIR)" -newer "$(MLX_A)" -print -quit | grep -q .; then \
-		echo "Building MLX42 library..."; \
 		cmake -S $(MLX_DIR) -B $(BUILD_DIR)/mlx42; \
 		make --no-print-directory -C $(BUILD_DIR)/mlx42 -j4; \
-	else \
-		echo "MLX42 library is up to date."; \
-	fi
+		fi;
 
 $(NAME): $(LIBFT_A) $(MLX_A) $(OBJ)
 	@$(CC) $(OBJ) $(LIBFT_A) $(MLX_A) $(LDFLAGS) -o $@
@@ -57,11 +52,12 @@ $(OBJ_DIR):
 	@mkdir -p $@
 
 clean:
-	rm -rf $(BUILD_DIR)
+	# rm -rf $(BUILD_DIR)
+	rm -rf $(OBJ_DIR) $(BUILD_DIR)/src
 	@make --no-print-directory -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -rf $(NAME) $(MLX_DIR)
+	rm -rf $(NAME) $(BUILD_DIR) $(MLX_DIR)
 	@make --no-print-directory fclean -C $(LIBFT_DIR)
 
 re: fclean all

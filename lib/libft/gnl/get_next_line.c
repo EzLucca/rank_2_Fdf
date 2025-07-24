@@ -12,81 +12,88 @@
 
 #include "../include/get_next_line.h"
 
-static char	*extract_line(char *stash)
+static void	*ft_memcpy_gnl(char *dest, const char *src, size_t n)
 {
-	char	*line;
-	int		i;
-
-	if (!stash)
-		return (NULL);
-	i = 0;
-	while (stash[i] && stash[i] != '\n')
-		i++;
-	if (stash[i] == '\n')
-		i++;
-	line = ft_strndup_gnl(stash, i);
-	if (!line)
-		return (NULL);
-	return (line);
+	while (n--)
+		*dest++ = *src++;
+	return (dest);
 }
 
-static char	*update_buffer(char *stash)
+static int	read_to_buffer(char *buffer, int fd)
 {
-	char	*left;
-	char	*new_string;
+	int	bytes_read;
 
-	if (!stash)
-		return (NULL);
-	left = ft_strchr_gnl(stash, '\n');
-	if (!left)
-		return (free(stash), NULL);
-	left++;
-	if (*left == '\0')
-		return (free(stash), NULL);
-	new_string = ft_strndup_gnl(left, ft_strlen_gnl(left));
-	if (!new_string)
-		return (free(stash), NULL);
-	free (stash);
-	return (new_string);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read <= 0)
+		return (bytes_read);
+	buffer[bytes_read] = '\0';
+	return (bytes_read);
 }
 
-static	char	*read_from_file(char *stash, int fd)
+static char	*extract_line(char *line, char *buffer)
 {
-	char		*buf;
-	ssize_t		bytes;
+	char	*temp;
+	char	*joined;
+	char	*nl;
 
-	buf = malloc(BUFFER_SIZE + 1);
-	if (!buf)
-		return (free(stash), stash = NULL, NULL);
-	while (!ft_strchr_gnl(stash, '\n'))
+	nl = ft_strchr_gnl(buffer, '\n');
+	if (nl)
 	{
-		bytes = read(fd, buf, BUFFER_SIZE);
-		if (bytes == 0)
-			break ;
-		if (bytes < 0)
-			return (free(buf), free(stash), stash = NULL, NULL);
-		buf[bytes] = '\0';
-		stash = ft_strjoin_gnl(stash, buf);
-		if (!stash)
-			return (free(buf), NULL);
+		temp = ft_substr_gnl(buffer, 0, nl - buffer + 1);
+		if (!temp)
+			return (free(line), NULL);
+		ft_memcpy_gnl(buffer, nl + 1, ft_strlen_gnl(nl + 1) + 1);
 	}
-	free (buf);
-	return (stash);
+	else
+	{
+		temp = ft_strdup_copy(buffer);
+		if (!temp)
+			return (NULL);
+		*buffer = 0;
+	}
+	if (!line)
+		return (temp);
+	joined = ft_strjoin_gnl(line, temp);
+	return (free(line), free(temp), joined);
+}
+
+static char	*process_read_loop(int fd, char *buffer, char *line)
+{
+	char	*temp;
+
+	while (read_to_buffer(buffer, fd) >= 0)
+	{
+		if (!*buffer)
+			return (line);
+		if (ft_strchr_gnl(buffer, '\n'))
+			return (extract_line(line, buffer));
+		temp = ft_strjoin_gnl(line, buffer);
+		if (!temp)
+			break ;
+		free(line);
+		line = temp;
+		*buffer = 0;
+	}
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*stash;
-	char			*line;
+	static char	buffer[BUFFER_SIZE + 1];
+	char		*line;
+	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	stash = read_from_file(stash, fd);
-	if (!stash)
-		return (NULL);
-	line = extract_line(stash);
-	if (!line)
-		return (free(stash), stash = NULL, NULL);
-	stash = update_buffer(stash);
-	return (line);
+	line = NULL;
+	if (*buffer)
+	{
+		line = extract_line(NULL, buffer);
+		if (!line || ft_strchr_gnl(line, '\n'))
+			return (line);
+	}
+	temp = process_read_loop(fd, buffer, line);
+	if (temp)
+		return (temp);
+	return (free(line), NULL);
 }

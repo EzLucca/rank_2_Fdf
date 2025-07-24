@@ -20,12 +20,14 @@ static void	grid_check(int fd, t_map *map)
 
 	current_column = 0;
 	tmp = get_next_line(fd);
+	if (!tmp)
+		ft_error_map("Map is empty.", fd, map);
 	while (tmp)
 	{
 		line = ft_strtrim (tmp, "\n");
 		free (tmp);
 		if (!points_check(line))
-			ft_error_close ("Invalid point.", fd);
+			ft_error_map("Invalid point.", fd, map);
 		map->rows++;
 		current_column = count_tokens(line, ' ');
 		if (map->cols == 0)
@@ -33,7 +35,7 @@ static void	grid_check(int fd, t_map *map)
 		else if ((map->cols != current_column))
 		{
 			free (line);
-			ft_error_close ("Couldn't read file", fd);
+			ft_error_map("Missing point.", fd, map);
 		}
 		free (line);
 		tmp = get_next_line(fd);
@@ -67,7 +69,7 @@ static t_map	*open_validate_map(char *filename)
 	t_map	*map;
 
 	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	if (fd <= 0)
 		ft_error ("Can't open file.");
 	map = malloc(sizeof(t_map));
 	if (!map)

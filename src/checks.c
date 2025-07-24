@@ -26,8 +26,8 @@ static bool	color_check(const char *color)
 	while (color[i])
 	{
 		if (!((color[i] >= '0' && color[i] <= '9')
-				|| (color[i] >= 'a' && color[i] <= 'f')
-				|| (color[i] >= 'A' && color[i] <= 'F')))
+					|| (color[i] >= 'a' && color[i] <= 'f')
+					|| (color[i] >= 'A' && color[i] <= 'F')))
 		{
 			return (false);
 		}
@@ -60,6 +60,7 @@ static bool	valid_point(char *token)
 {
 	char	**point;
 
+	point = NULL;
 	if (ft_strchr(token, ','))
 	{
 		point = ft_split(token, ',');
@@ -68,6 +69,8 @@ static bool	valid_point(char *token)
 	}
 	else if (!number_check(token))
 		return (false);
+	if (point)
+		ft_free_array(point); 
 	return (true);
 }
 
