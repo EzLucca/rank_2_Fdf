@@ -56,4 +56,4 @@ valgrind --leak-check=full --suppressions=valgrind.supp ./fdf
 `https://velog.io/@tmdgks2222/fdf`
 `https://github.com/8luerose/FDF.git`
 `https://github.com/ailopez-o/42Barcelona-FdF`
-
+`https://www.youtube.com/watch?v=y_SPO_b-WXk&t=604s`
