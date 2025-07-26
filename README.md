@@ -8,10 +8,23 @@ The objective of this project is to create a 3d representation of a landscape.
 Creating a siimple wireframe model representation of 3d landscape by linking
 various points  (x, y, z) thanks to line segments(edges).
 This is the first graphical project of the 42 school, the library allowed to 
-be used is minilibx. 
+be used is minilibx or MLX42. 
 
-### The Functions 
+### Instalation
+
+clone the repository
+```
+```
+compile the executable
+```
+cd rank2_fdf && make
+```
+Run with this command
+```
+./fdf test_maps/<map_name>.fdf
+```
 ### The logic
+
 1. Argv checks
 2. Map validation
 - [x] correct extension
@@ -24,23 +37,28 @@ be used is minilibx.
 - [x] Malloc grid
 - [x] Fill the grid
 4. Draw points and line
+- [x] Project a 3d point into 2d.
+- [x] Algorithm to Draw line (Bresenham)
 5. visualization
-### The Bonus
+- [x] center the image
+- [x] zoom
+- [x] set keymaps
+6. Bonus
+- [x] rotations 
+- [x] Orthogonal view
+- [x] put different colrs
 
-- [x] gnl leaks 
-- [x] Color 0xffffff works and 0xff also works Should it?
-- [x] Protect z value for not bigger numbers
-- [ ] color button inconsistent
-- [x] empty file map
+### The structure
+
 
 ### Tools
 
 This command will show a rule for each error found
 ```
-valgrind --leak-check=full --gen-suppressions=all --log-file=filename.txt ./fdf test_maps/pyramide.fdf
+valgrind --leak-check=full --gen-suppressions=all --log-file=valgrind_output.txt ./fdf test_maps/pyramide.fdf
 ```
 ```
-grep -v '^==' valgrind_output.txt > cleaned_output.supp
+grep -v '^==' valgrind_output.txt > valgrind.supp
 ```
 ```
 awk ' BEGIN { RS="}\n"; ORS="" } !seen[$0]++ { print $0 "}\n" } ' suppressions.supp > cleaned.supp
