@@ -16,14 +16,15 @@ MLX_DIR     := lib/MLX42
 MLX_A       := $(BUILD_DIR)/mlx42/libmlx42.a
 
 SRC      := $(SRC_DIR)/checks.c \
+			$(SRC_DIR)/color.c \
 			$(SRC_DIR)/draw.c \
 			$(SRC_DIR)/hooks.c \
-			$(SRC_DIR)/image.c \
 			$(SRC_DIR)/loop.c \
 			$(SRC_DIR)/main.c \
 			$(SRC_DIR)/parsing.c \
 			$(SRC_DIR)/rotations.c \
 			$(SRC_DIR)/utils.c \
+			$(SRC_DIR)/init.c \
 
 OBJ      := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -52,7 +53,6 @@ $(OBJ_DIR):
 	@mkdir -p $@
 
 clean:
-	# rm -rf $(BUILD_DIR)
 	rm -rf $(OBJ_DIR) $(BUILD_DIR)/src
 	@make --no-print-directory -C $(LIBFT_DIR) clean
 

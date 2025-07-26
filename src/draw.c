@@ -42,9 +42,9 @@ static void	bresenham_draw(mlx_image_t *image, t_point2d a, t_point2d b)
 	while (1)
 	{
 		if ((uint32_t)jack.cur.x < image->width
-				&& (uint32_t)jack.cur.y < image->height)
+			&& (uint32_t)jack.cur.y < image->height)
 			mlx_put_pixel(image, jack.cur.x, jack.cur.y,
-					get_color(jack.cur, jack.a, jack.b));
+				get_color(jack.cur, jack.a, jack.b));
 		if (jack.cur.x == jack.b.x && jack.cur.y == jack.b.y)
 			break ;
 		e2 = 2 * jack.err;
@@ -98,14 +98,14 @@ static void	draw_line(t_fdf *fdf, int x, int y)
 	{
 		project_point(fdf->map, y + 1, x);
 		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
-				fdf->map->grid2d[y + 1][x]);
+			fdf->map->grid2d[y + 1][x]);
 	}
 	if (x + 1 < fdf->map->cols)
 	{
 		if (y == 0)
 			project_point(fdf->map, y, x + 1);
 		bresenham_draw(fdf->image, fdf->map->grid2d[y][x],
-				fdf->map->grid2d[y][x + 1]);
+			fdf->map->grid2d[y][x + 1]);
 	}
 }
 

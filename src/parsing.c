@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 17:00:31 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/23 10:51:16 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/26 12:08:00 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@ static int	fill_color(char *data, t_map *map, int fd, char **split)
 	char	*comma;
 	int		color;
 
+	(void) fd;
+	(void) map;
+	(void) split;
 	comma = ft_strchr(data, ',');
 	if (!comma)
 		return (0xFFFFFFFF);
 	comma += 3;
 	ft_striteri(comma, &ft_upper);
-	if (ft_strlen(comma) != 6)
+	if (ft_strlen(comma) > 6)
 	{
 		ft_free_array(split);
 		ft_error_map("Invalid_map (color must be 6-digit hex)", fd, map);
@@ -79,30 +82,5 @@ void	parse_map(int fd, t_map *map)
 		process_points(fd, map, split, y);
 		y++;
 		ft_free_array(split);
-	}
-}
-
-void	allocate_grid(t_map *map)
-{
-	int	i;
-
-	map->grid3d = malloc(sizeof(t_point3d *) * map->rows);
-	map->grid2d = malloc(sizeof(t_point2d *) * map->rows);
-	if (!(map->grid3d) || !(map->grid2d))
-	{
-		free_map(map);
-		ft_error("Error malloc grid.");
-	}
-	i = 0;
-	while (i < map->rows)
-	{
-		map->grid3d[i] = malloc(sizeof(t_point3d) * map->cols);
-		map->grid2d[i] = malloc(sizeof(t_point2d) * map->cols);
-		if (!(map->grid3d[i]) || !(map->grid2d[i]))
-		{
-			free_map(map);
-			ft_error("Error malloc grid.");
-		}
-		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:40:18 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/23 18:53:26 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/26 13:58:27 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <fcntl.h>
 # include <math.h>
 # include <limits.h>
+# include "fdf_structs.h"
 # include "../lib/libft/include/libft.h"
 # include "../lib/MLX42/include/MLX42/MLX42.h"
-
 # define WIDTH 1280 /* Initial window width */
 # define HEIGHT 720 /* Initial window height */
 # define TITLE "Fdf" /* Text shown in window title bar */
@@ -33,68 +33,6 @@
 # define COLOR_THREE		0x66c2a5ff
 # define COLOR_TWO			0x3288bdff
 # define COLOR_ONE			0x5e4fa2ff
-
-typedef struct s_point3d
-{
-	double	x;
-	double	y;
-	double	z;
-	int		mapcolor;
-	int		zcolor;
-}	t_point3d;
-
-typedef struct s_point2d
-{
-	double	x;
-	double	y;
-	double	z;
-	int		rgba;
-}	t_point2d;
-
-typedef struct s_draw
-{
-	int			dx;		// Difference in x between a and b (b.x - a.x)
-	int			dy;		// Difference in y between a and b (b.y - a.y)
-	int			sx;		// Direction for x: +1 if a.x < b.x, -1 if a.x > b.x
-	int			sy;		// Direction for y: +1 if a.y < b.y, -1 if a.y > b.y
-	int			err;	// Error accumulator used in Bresenham's algorithm
-	t_point2d	cur;	// Current point plotted (from a and steps toward b)
-	t_point2d	b;		// Ending point of the line
-	t_point2d	a;		// Starting point of the line
-}	t_draw;
-
-typedef struct s_map
-{
-	int			fd;
-	int			rows;		// Number of rows
-	int			cols;		// Number of columns
-	int			high;		// Highest elevation value
-	int			low;		// Lowest elevation value
-	bool		use_zcolor;	// apply color based on elevation (z-axis)
-	double		alpha;		// Isometric projection angle (Y rotation)
-	double		beta;		// Isometric projection angle (X rotation)
-	double		interval;	// Spacing between points
-	double		x_offset;	// Horizontal value to center or move the map
-	double		y_offset;	// Vertical value to center or move the map
-	double		xrotate;	// Manual rotation angle around X-axis
-	double		yrotate;	// Manual rotation angle around Y-axis
-	double		zrotate;	// Manual rotation angle around Z-axis
-	double		zoom;		// Zoom level applied to the entire map
-	double		zscale;		// Scale factor for Z-axis
-	t_point3d	**grid3d;	// 2D array of original 3D points
-	t_point2d	**grid2d;	// 2D array of transformed 2D points (display)
-	bool		orthogonal;	// orthogonal view
-}	t_map;
-
-typedef struct s_fdf
-{
-	mlx_t		*mlx;
-	t_map		*map;
-	mlx_image_t	*image;
-	bool		x_rotation_enabled;
-	bool		y_rotation_enabled;
-	bool		z_rotation_enabled;
-}	t_fdf;
 
 /**
  * @brief Calculates the color of a point along a line based on its position
@@ -422,5 +360,42 @@ void	ft_error_map(char *str, int fd, t_map *map);
  * @return void
  */
 void	ft_upper(unsigned int i, char *c);
+
+/**
+ * @brief Opens, validates, parses, and initializes a map from a given file.
+ *
+ * This function performs a comprehensive series of operations to load a map:
+ * Opens and performs an initial validation pass on the grid structure
+ * Allocates memory for the map's grid based on the validated dimensions.
+ * Parse the actual point data into the allocated grid.
+ *
+ * @param filename The path to the map file (e.g., ".fdf" file).
+ * @return A pointer to a newly allocated and initialized `t_map` structure
+ * containing the parsed map data.
+ */
+t_map	*open_validate_map(char *filename);
+
+/**
+ * @brief Initializes the FDF application (map, MLX windows, MLX image).
+ *
+ * Sets up core FDF components:
+ * - Loads and validates map data from `filename`.
+ * - Initializes MLX42 context.
+ * - Creates a new image buffer for rendering.
+ *
+ * @param filename Path to the map file.
+ * @param fdf Pointer to the `t_fdf` structure to initialize.
+ */
+void	init_fdf(char *filename, t_fdf	*fdf);
+
+/**
+ * @brief Initializes the members of a `t_map` structure to default values.
+ *
+ * Sets initial values for angles, offsets, zoom, scale, color usage,
+ * min/max Z-values, dimensions, and grid pointers.
+ *
+ * @param map Pointer to the `t_map` structure to be initialized.
+ */
+void	init_map(t_map *map);
 
 #endif

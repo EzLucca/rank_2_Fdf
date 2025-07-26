@@ -6,7 +6,7 @@
 /*   By: edlucca <edlucca@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:04:29 by edlucca           #+#    #+#             */
-/*   Updated: 2025/07/23 19:11:52 by edlucca          ###   ########.fr       */
+/*   Updated: 2025/07/26 12:59:57 by edlucca          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	display_menu(mlx_t *mlx)
 	mlx_put_string(mlx, "PROJECTION", x, y += 30);
 	mlx_put_string(mlx, "Isometric\t\t\t\t\t\t\ti", x, y += 20);
 	mlx_put_string(mlx, "Orthogonal\t\t\t\t\t\to", x, y += 20);
-	mlx_put_string(mlx, "RESET\t\t\t\t\t\t\t\t\t\t0", x, y += 30);
+	mlx_put_string(mlx, "RESET\t\t\t\t\t\t\t\t\t\t\t0", x, y += 30);
 }
 
 void	reset_draw(mlx_image_t *image)
