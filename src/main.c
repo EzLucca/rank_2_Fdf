@@ -66,7 +66,10 @@ t_map	*open_validate_map(char *filename)
 	map->interval = ft_max(2, map->interval);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
+	{
+		free_map(map);
 		ft_error ("Can't re-open file.");
+	}
 	parse_map (fd, map);
 	close (fd);
 	set_zcolor (map);
@@ -84,8 +87,9 @@ int	main(int argc, char **argv)
 	display_menu (fdf.mlx);
 	if (mlx_image_to_window (fdf.mlx, fdf.image, 0, 0) == -1)
 	{
-		free_map(fdf.map);
 		mlx_close_window(fdf.mlx);
+		mlx_terminate (fdf.mlx);
+		free_map(fdf.map);
 		ft_error("error image");
 	}
 	mlx_loop_hook (fdf.mlx, loop_handler, &fdf);

@@ -66,6 +66,7 @@ awk ' BEGIN { RS="}\n"; ORS="" } !seen[$0]++ { print $0 "}\n" } ' suppressions.s
 The next time run the command and errors will be suppressed
 ```
 valgrind --leak-check=full --suppressions=valgrind.supp ./fdf
+valgrind --leak-check=full --track-origins=yes --show-reachable=yes --suppressions=mlx.supp ./fdf
 ```
 ### Fonts
 `https://pedromelodev.com/index.php/2024/01/14/fdf-chronicles-navigating-the-pro-world-of-2d-projections/`

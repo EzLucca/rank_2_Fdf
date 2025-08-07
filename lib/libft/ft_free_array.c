@@ -26,6 +26,7 @@ void	ft_free_array(char **array)
 		i++;
 	}
 	free (array);
+	array = NULL;
 }
 
 void	ft_free_tab(void **tab, size_t len)

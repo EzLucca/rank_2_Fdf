@@ -14,8 +14,8 @@
 
 void	init_map(t_map *map)
 {
-	map->alpha = 0.46373398 / 2;
-	map->beta = 0.46373398;
+	map->alpha = 20 * (M_PI / 180);
+	map->beta = 30 * (M_PI / 180);
 	map->xrotate = 0;
 	map->yrotate = 0;
 	map->zrotate = 0;
@@ -45,8 +45,9 @@ void	init_fdf(char *filename, t_fdf	*fdf)
 	fdf->image = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
 	if (!fdf->image)
 	{
-		free_map(fdf->map);
 		mlx_close_window(fdf->mlx);
+		mlx_terminate (fdf->mlx);
+		free_map(fdf->map);
 		ft_error("Error: fdf.image");
 	}
 }
